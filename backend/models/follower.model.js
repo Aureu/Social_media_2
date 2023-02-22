@@ -5,11 +5,11 @@ module.exports = (sequelize, Sequelize) => {
 			primaryKey: true,
 			autoIncrement: true,
 		},
-		follower_user_id: {
+		id_follower_user: {
 			type: Sequelize.INTEGER,
 			foreignKey: true,
 		},
-		following_user_id: {
+		id_following_user: {
 			type: Sequelize.INTEGER,
 			foreignKey: true,
 		},

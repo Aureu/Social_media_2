@@ -5,11 +5,11 @@ module.exports = (sequelize, Sequelize) => {
 			primaryKey: true,
 			autoIncrement: true,
 		},
-		user_id: {
+		id_user: {
 			type: Sequelize.INTEGER,
 			foreignKey: true,
 		},
-		post_id: {
+		id_post: {
 			type: Sequelize.INTEGER,
 			foreignKey: true,
 		},

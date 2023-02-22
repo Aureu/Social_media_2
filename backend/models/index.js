@@ -31,43 +31,43 @@ db.user_info = require('./user_info.model.js')(sequelize, Sequelize);
 
 // USER RELATIONS
 db.user_info.belongsTo(db.user, {
-	foreign_key: 'user_id',
+	foreignKey: 'id_user',
 });
 
 db.user_avatar.belongsTo(db.user, {
-	foreign_key: 'user_id',
+	foreignKey: 'id_user',
 });
 
 // POST RELATIONS
 db.post.belongsTo(db.user, {
-	foreign_key: 'user_id',
+	foreignKey: 'id_user',
 });
 
 // COMMENT RELATIONS
 db.comment.belongsTo(db.user, {
-	foreign_key: 'user_id',
+	foreignKey: 'id_user',
 });
 
 db.comment.belongsTo(db.comment, {
-	foreign_key: 'parent_comment_id',
+	foreignKey: 'parent_comment_id',
 });
 
 // LIKE RELATIONS
 db.like.belongsTo(db.user, {
-	foreign_key: 'user_id',
+	foreignKey: 'id_user',
 });
 
 db.like.belongsTo(db.post, {
-	foreign_key: 'post_id',
+	foreignKey: 'id_post',
 });
 
 // FOLLOWER RELATIONS
 db.follower.belongsTo(db.user, {
-	foreign_key: 'follower_user_id',
+	foreignKey: 'follower_id_user',
 });
 
 db.follower.belongsTo(db.user, {
-	foreign_key: 'following_user_id',
+	foreignKey: 'following_id_user',
 });
 
 module.exports = db;

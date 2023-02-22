@@ -29,8 +29,19 @@ const ProfilePage = () => {
 				Email: {user?.email} <br />
 				<a href={`/profile/edit`}>Upravit profil</a>
 			</div>
+			<hr />
 			<div>
-				<h3>Prispevky</h3>
+				<form>
+					<textarea
+						name=''
+						id=''
+						cols='30'
+						rows='5'
+						placeholder='Napiste prispevek'
+						maxLength={300}
+					></textarea>
+					<input type='submit' value='Odeslat' />
+				</form>
 			</div>
 		</div>
 	);
