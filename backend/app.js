@@ -21,6 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 require('./routes/auth.route')(app);
+require('./routes/user.route')(app);
 
 // set port
 const PORT = process.env.PORT || 8080;

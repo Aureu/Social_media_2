@@ -19,6 +19,7 @@ const LoginPage = () => {
 	return (
 		<div>
 			<h2>Prihlaseni</h2> <br />
+			<a href='/register'>Register</a> <br />
 			<form onSubmit={handleLogin}>
 				<label>Prezdivku</label>
 				<input type='text' ref={user} />

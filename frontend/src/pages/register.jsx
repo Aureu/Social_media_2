@@ -26,7 +26,8 @@ const RegisterPage = () => {
 
 	return (
 		<div>
-			<h2>Registrace</h2>
+			<h2>Registrace</h2> <br />
+			<a href='/login'>Login</a> <br />
 			<form onSubmit={submitRegister}>
 				<label>Jmeno</label>
 				<input type='text' ref={fname} />
