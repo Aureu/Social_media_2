@@ -20,6 +20,8 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
+require('./routes/auth.route')(app);
+
 // set port
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
