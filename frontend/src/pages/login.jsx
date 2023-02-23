@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import AuthService from '../services/auth.service';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../components/Navbar';
 
 const LoginPage = () => {
 	const user = useRef();
@@ -17,17 +18,27 @@ const LoginPage = () => {
 	};
 
 	return (
-		<div>
-			<h2>Prihlaseni</h2> <br />
-			<a href='/register'>Register</a> <br />
-			<form onSubmit={handleLogin}>
-				<label>Prezdivku</label>
-				<input type='text' ref={user} />
-				<label>Heslo</label>
-				<input type='password' ref={pass} />
-				<input type='submit' value='Prihlasit se' />
-			</form>
-		</div>
+		<>
+			<Navbar />
+			<br /> <br /> <br /> <br />
+			<div className='login-form'>
+				<h2 className='login-form__title'>Prihlaseni</h2>
+				<a className='login-form__register-link' href='/register'>
+					Register
+				</a>
+				<form className='login-form__form' onSubmit={handleLogin}>
+					<label className='login-form__label'>Prezdivku</label>
+					<input className='login-form__input' type='text' ref={user} />
+					<label className='login-form__label'>Heslo</label>
+					<input className='login-form__input' type='password' ref={pass} />
+					<input
+						className='login-form__submit'
+						type='submit'
+						value='Prihlasit se'
+					/>
+				</form>
+			</div>
+		</>
 	);
 };
 
