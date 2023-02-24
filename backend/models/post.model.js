@@ -12,6 +12,9 @@ module.exports = (sequelize, Sequelize) => {
 		content: {
 			type: Sequelize.STRING,
 		},
+		isDeleted: {
+			type: sequelize.BOOLEAN,
+		},
 	});
 	return Post;
 };

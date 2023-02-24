@@ -1,15 +1,16 @@
 const db = require('../models');
-const Post = db.post;
+const Comment = db.comment;
 
 exports.get = (req, res) => {
-	Post.findAll({ where: { id_user: req.body.user_id } }).then((posts) => {
-		res.send(posts).status(200);
+	Comment.findAll({ where: { id_post: req.body.post_id } }).then((comments) => {
+		res.send(comments).status(200);
 	});
 };
 
 exports.create = (req, res) => {
-	Post.create({
+	Comment.create({
 		id_user: req.body.user_id,
+		id_post: req.body.post_id,
 		content: req.body.content,
 	})
 		.then(() => {
@@ -21,12 +22,12 @@ exports.create = (req, res) => {
 };
 
 exports.change = (req, res) => {
-	Post.update(
+	Comment.update(
 		{
 			...req.body,
 		},
 		{
-			where: { id: req.body.post_id },
+			where: { id: req.body.comment_id },
 		}
 	)
 		.then(() => {
@@ -38,7 +39,7 @@ exports.change = (req, res) => {
 };
 
 exports.delete = (req, res) => {
-	Post.update({ isDeleted: 1 }, { where: { id: req.body.post_id } }).then(
+	Comment.update({ isDeleted: 1 }, { where: { id: req.body.comment_id } }).then(
 		() => {
 			res.sendStatus(200);
 		}

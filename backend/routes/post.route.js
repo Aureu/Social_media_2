@@ -12,4 +12,8 @@ module.exports = function (app) {
 	app.post('/api/post/create', controller.create);
 
 	app.post('/api/post', controller.get);
+
+	app.post('/api/post/edit', controller.change);
+
+	app.post('/api/post/delete', controller.delete);
 };

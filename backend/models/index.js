@@ -28,6 +28,7 @@ db.follower = require('./follower.model.js')(sequelize, Sequelize);
 db.like = require('./like.model.js')(sequelize, Sequelize);
 db.user_avatar = require('./user_avatar.model.js')(sequelize, Sequelize);
 db.user_info = require('./user_info.model.js')(sequelize, Sequelize);
+db.notification = require('./notification.model.js')(sequelize, Sequelize);
 
 // USER RELATIONS
 db.user_info.belongsTo(db.user, {
@@ -63,11 +64,11 @@ db.like.belongsTo(db.post, {
 
 // FOLLOWER RELATIONS
 db.follower.belongsTo(db.user, {
-	foreignKey: 'follower_id_user',
+	foreignKey: 'id_follower_user',
 });
 
 db.follower.belongsTo(db.user, {
-	foreignKey: 'following_id_user',
+	foreignKey: 'id_following_user',
 });
 
 module.exports = db;

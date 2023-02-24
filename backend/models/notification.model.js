@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-	const Comment = sequelize.define('comments', {
+	const Like = sequelize.define('notifications', {
 		id: {
 			type: Sequelize.INTEGER,
 			primaryKey: true,
@@ -9,16 +9,16 @@ module.exports = (sequelize, Sequelize) => {
 			type: Sequelize.INTEGER,
 			foreignKey: true,
 		},
-		id_post: {
+		id_source: {
 			type: Sequelize.INTEGER,
 			foreignKey: true,
 		},
-		content: {
+		type: {
 			type: Sequelize.STRING,
 		},
-		isDeleted: {
-			type: sequelize.BOOLEAN,
+		description: {
+			type: Sequelize.STRING,
 		},
 	});
-	return Comment;
+	return Like;
 };

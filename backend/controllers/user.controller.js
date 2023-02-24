@@ -23,3 +23,11 @@ exports.change = (req, res) => {
 			res.status(500).send({ message: err.message });
 		});
 };
+
+exports.delete = (req, res) => {
+	User.update({ isDeleted: 1 }, { where: { id: req.body.user_id } }).then(
+		() => {
+			res.sendStatus(200);
+		}
+	);
+};
