@@ -17,7 +17,7 @@ module.exports = (sequelize, Sequelize) => {
 			type: Sequelize.STRING,
 		},
 		isDeleted: {
-			type: sequelize.BOOLEAN,
+			type: Sequelize.BOOLEAN,
 		},
 	});
 	return Comment;

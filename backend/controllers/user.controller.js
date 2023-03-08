@@ -24,10 +24,12 @@ exports.change = (req, res) => {
 		});
 };
 
-exports.delete = (req, res) => {
-	User.update({ isDeleted: 1 }, { where: { id: req.body.user_id } }).then(
-		() => {
+exports.deleteUser = (req, res) => {
+	User.update({ isDeleted: 1 }, { where: { id: req.body.user_id } })
+		.then(() => {
 			res.sendStatus(200);
-		}
-	);
+		})
+		.catch((err) => {
+			res.status(500).send({ message: err.message });
+		});
 };

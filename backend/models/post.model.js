@@ -10,10 +10,10 @@ module.exports = (sequelize, Sequelize) => {
 			foreignKey: true,
 		},
 		content: {
-			type: Sequelize.STRING,
+			type: Sequelize.TEXT,
 		},
 		isDeleted: {
-			type: sequelize.BOOLEAN,
+			type: Sequelize.BOOLEAN,
 		},
 	});
 	return Post;

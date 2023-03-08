@@ -19,24 +19,29 @@ const LoginPage = () => {
 
 	return (
 		<>
-			<Navbar />
-			<br /> <br /> <br /> <br />
-			<div className='login-form'>
-				<h2 className='login-form__title'>Prihlaseni</h2>
-				<a className='login-form__register-link' href='/register'>
-					Register
-				</a>
-				<form className='login-form__form' onSubmit={handleLogin}>
-					<label className='login-form__label'>Prezdivku</label>
-					<input className='login-form__input' type='text' ref={user} />
-					<label className='login-form__label'>Heslo</label>
-					<input className='login-form__input' type='password' ref={pass} />
-					<input
-						className='login-form__submit'
-						type='submit'
-						value='Prihlasit se'
-					/>
-				</form>
+			<div className='form-container'>
+				<div className='form'>
+					<h2 className='form__title'>Prihlaseni</h2>
+
+					<form className='form__form' onSubmit={handleLogin}>
+						<label className='form__form__label'>Prezdivku</label>
+						<input className='form__form__input' type='text' ref={user} />
+						<label className='form__form__label'>Heslo</label>
+						<input className='form__form__input' type='password' ref={pass} />
+						<input
+							className='form__form__submit'
+							type='submit'
+							value='Prihlasit se'
+						/>
+					</form>
+					<br />
+					<p>
+						Nemáte účet?
+						<a className='form__register-link' href='/register'>
+							Registrovat
+						</a>
+					</p>
+				</div>
 			</div>
 		</>
 	);

@@ -54,43 +54,74 @@ const ProfilePage = () => {
 	return (
 		<>
 			<Navbar />
-			<div className='profile-container'>
-				<div className='user-info'>
-					<div>
-						Jmeno: {user?.first_name} <br /> Prijmeni: {user?.last_name} <br />{' '}
-						Email: {user?.email} <br />
-						<a href={`/profile/edit`}>Upravit profil</a>
-					</div>
-					<hr />
-					<div className='post-form'>
-						<form onSubmit={sendPost}>
-							<textarea
-								name=''
-								id=''
-								cols='53'
-								rows='5'
-								placeholder='Napiste prispevek'
-								maxLength={200}
-								ref={content}
-							></textarea>
-							<input type='submit' value='Odeslat' />
-						</form>
-						<br />
-						{posts?.map((post) => {
-							const date = new Date(post.createdAt);
-							const formattedDate = `${date.getDate()}.${
-								date.getMonth() + 1
-							}.${date.getFullYear()} - ${date.getHours()}:${(
-								'0' + date.getMinutes()
-							).slice(-2)}`;
 
-							return (
-								<div className='post'>
-									<h3>{post.content}</h3>
-									<span>{formattedDate}</span>
-								</div>
-							);
-						})}
+			<div className='profile-container'>
+				<div className='wrapper'>
+					<div className='border'>
+						<div className='profile-header'>
+							<img
+								src='img/farma_rochov.png'
+								alt='Profile Photo'
+								className='profile-photo'
+							/>
+							<div className='user-info'>
+								<h1>
+									{user?.first_name} {user?.last_name}
+								</h1>
+								<p>@{user?.username}</p>
+								<p>Sledujici 50</p>
+								<p>Sleduji 68</p>
+							</div>
+						</div>
+						<div className='profile-main'>
+							<div className='left'>
+								<h3>User info</h3>
+								<p>Web Developer</p>
+								<p>New York, NY</p>
+							</div>
+							<div className='right'>
+								<h3>Posts</h3>
+								<form onSubmit={sendPost}>
+									<textarea
+										name=''
+										id=''
+										cols='53'
+										rows='5'
+										placeholder='Napiste prispevek'
+										maxLength={500}
+										ref={content}
+									></textarea>
+									<input type='submit' value='Odeslat' />
+								</form>
+								{posts
+									?.sort(
+										(a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+									)
+									.map((post) => {
+										const date = new Date(post.createdAt);
+										const formattedDate = `${date.getDate()}.${
+											date.getMonth() + 1
+										}.${date.getFullYear()} - ${date.getHours()}:${(
+											'0' + date.getMinutes()
+										).slice(-2)}`;
+										return (
+											<div class='post'>
+												<div class='post-header'>
+													<div class='post-icon'></div>
+													<div class='post-author'>John Doe</div>
+													<div class='post-date'>{formattedDate}</div>
+												</div>
+												<div class='post-content'>{post.content}</div>
+												<div class='post-footer'>
+													<button>Like</button>
+													<button>Comment</button>
+													<button>Share</button>
+												</div>
+											</div>
+										);
+									})}
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

@@ -40,6 +40,7 @@ const Navbar = () => {
 									Kontakt
 								</NavLink>
 							</li>
+
 							<li>
 								{authService.getCurrentUser() ? (
 									<a onClick={authService.logout} href={'/login'}>
