@@ -45,11 +45,12 @@ button {
 }
 
 /* ----------NAVBAR----------- */
+/* ----------NAVBAR----------- */
 .navbar {
 	height: 60px;
 	width: 100%;
 	z-index: 1;
-	position: absolute;
+	position: fixed;
 	background-color: $primary-color;
 	box-shadow: 2.8px 2.8px 2.2px rgba(0, 0, 0, 0.02),
 		6.7px 6.7px 5.3px rgba(0, 0, 0, 0.028),
@@ -105,18 +106,55 @@ button {
 	font-weight: bold;
 }
 
-@media (max-width: 768px) {
-	.nav-elements ul li:not(:last-child) {
-		margin-right: 30px;
-	}
+.nav-profile {
+	display: flex;
+	align-items: center;
+	margin-left: auto;
+	position: relative;
 }
 
-@media (max-width: 600px) {
-	.menu-icon {
-		display: block;
-		cursor: pointer;
-	}
+.profile-image {
+	height: 40px;
+	width: 40px;
+	border-radius: 50%;
+	background-color: #ccc;
+	margin-right: 10px;
+	transition: all 0.2s ease-in-out;
+}
 
+.profile-image:hover {
+	transform: scale(1.1);
+	cursor: pointer;
+}
+
+.profile-name {
+	transition: all 0.2s ease-in-out;
+}
+
+.profile-image:hover + .profile-name {
+	color: #574c4c;
+	cursor: pointer;
+}
+
+.profile-dropdown {
+	position: absolute;
+	top: 60px;
+	right: 0;
+	width: 150px;
+	background-color: #fff;
+	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+	z-index: 1;
+	display: none;
+}
+
+.nav-profile:hover .profile-dropdown {
+	display: block;
+}
+
+.profile-dropdown a:hover {
+	color: #574c4c;
+}
+@media (max-width: 768px) {
 	.nav-elements {
 		position: absolute;
 		right: 0;
@@ -140,6 +178,15 @@ button {
 	.nav-elements ul li {
 		margin-right: unset;
 		margin-top: 22px;
+	}
+
+	.menu-icon {
+		display: block;
+		cursor: pointer;
+	}
+
+	.menu-icon.hide {
+		display: none;
 	}
 }
 

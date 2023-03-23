@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 
 const HomePage = () => {
@@ -13,6 +13,8 @@ const HomePage = () => {
 			<a href='/login'>Login</a>
 			<br />
 			<a href='/register'>Register</a>
+			<br />
+			<br />
 		</div>
 	);
 };

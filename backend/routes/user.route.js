@@ -14,4 +14,6 @@ module.exports = function (app) {
 	app.post('/api/user/change', controller.change);
 
 	app.post('/api/user/delete', controller.deleteUser);
+
+	app.get('/api/user/search', controller.searchUsers);
 };
