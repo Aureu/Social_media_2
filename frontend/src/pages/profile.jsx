@@ -2,6 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import AuthService from '../services/auth.service';
 import axios from 'axios';
 
+import ProfileModal from '../components/ProfileModal';
+import BioModal from '../components/BioModal';
+
 import Navbar from '../components/Navbar';
 
 const ProfilePage = () => {
@@ -9,6 +12,7 @@ const ProfilePage = () => {
 
 	const [user, setUser] = useState();
 	const [posts, setPosts] = useState();
+	const [bio, setBio] = useState();
 
 	const content = useRef();
 
@@ -39,6 +43,21 @@ const ProfilePage = () => {
 		return response.data;
 	};
 
+	const fetchBio = async () => {
+		const response = await axios.post(
+			`${process.env.REACT_APP_HOST}/api/user/bio`,
+			{ id: currentUser.id }
+		);
+
+		return response.data;
+	};
+
+	useEffect(() => {
+		fetchBio().then((bio) => {
+			setBio(bio);
+		});
+	}, []);
+
 	useEffect(() => {
 		fetchUser().then((user) => {
 			setUser(user);
@@ -52,14 +71,10 @@ const ProfilePage = () => {
 	}, []);
 
 	/* MODALS */
-	const [showModal, setShowModal] = useState(false);
-
-	const handleChange = (event) => {
-		event.preventDefault();
-	};
+	const [showInfoModal, setShowInfoModal] = useState(false);
 
 	const toggleInfoModal = () => {
-		setShowModal(!showModal);
+		setShowInfoModal(!showInfoModal);
 	};
 
 	/* CHANGE USER INFO */
@@ -81,6 +96,28 @@ const ProfilePage = () => {
 
 		axios
 			.post(`${process.env.REACT_APP_HOST}/api/user/change`, data)
+			.then(() => {
+				document.location.reload();
+			});
+	};
+
+	/* BIO MODAL */
+	const [showBioModal, setShowBioModal] = useState(false);
+
+	const toggleBioModal = () => {
+		setShowBioModal(!showInfoModal);
+	};
+
+	const changeBio = useRef();
+
+	const changeUserBio = () => {
+		const data = {
+			user_id: user.id,
+			bio: changeBio.current.value || bio.bio,
+		};
+
+		axios
+			.post(`${process.env.REACT_APP_HOST}/api/user/change_bio`, data)
 			.then(() => {
 				document.location.reload();
 			});
@@ -108,17 +145,33 @@ const ProfilePage = () => {
 								<button className='edit-button' onClick={toggleInfoModal}>
 									Edit
 								</button>
+								<ProfileModal
+									showModal={showInfoModal}
+									toggleModal={toggleInfoModal}
+									changeUserData={changeUserData}
+									changeFname={changeFname}
+									changeLname={changeLname}
+									changeUsername={changeUsername}
+									changeJob={changeJob}
+									changeLocation={changeLocation}
+									user={user}
+								/>
 							</div>
 						</div>
 						<div className='profile-main'>
 							<div className='left'>
 								<h3>About Me</h3>
-								<p>
-									I am a web developer with 5 years of experience. I am
-									passionate about creating websites and web applications that
-									are both functional and beautiful.
-								</p>
-								<button className='edit-button'>Edit</button>
+								<p>{bio?.bio}</p>
+								<button className='edit-button' onClick={toggleBioModal}>
+									Edit
+								</button>
+								<BioModal
+									showModal={showBioModal}
+									toggleModal={toggleBioModal}
+									changeBio={changeBio}
+									changeUserBio={changeUserBio}
+									bio={bio}
+								/>
 								<h3>Skills</h3>
 								<ul>
 									<li>HTML</li>
@@ -176,64 +229,6 @@ const ProfilePage = () => {
 					</div>
 				</div>
 			</div>
-
-			{/* modals */}
-			{showModal && (
-				<div className='modal'>
-					<div className='modal-content'>
-						<h2>Edit Profile</h2>
-						<form onSubmit={changeUserData}>
-							<label>
-								First Name:
-								<input
-									type='text'
-									name='fName'
-									placeholder={user?.first_name}
-									ref={changeFname}
-								/>
-							</label>
-							<label>
-								Last Name:
-								<input
-									type='text'
-									name='lName'
-									placeholder={user?.last_name}
-									ref={changeLname}
-								/>
-							</label>
-							<label>
-								Username:
-								<input
-									type='text'
-									name='username'
-									placeholder={user?.username}
-									ref={changeUsername}
-								/>
-							</label>
-							<label>
-								Job:
-								<input
-									type='text'
-									name='job'
-									placeholder={user?.job}
-									ref={changeJob}
-								/>
-							</label>
-							<label>
-								Location:
-								<input
-									type='text'
-									name='location'
-									placeholder={user?.location}
-									ref={changeLocation}
-								/>
-							</label>
-							<input type='submit' value='Save' />
-							<button onClick={toggleInfoModal}>Cancel</button>
-						</form>
-					</div>
-				</div>
-			)}
 		</>
 	);
 };

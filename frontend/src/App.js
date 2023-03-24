@@ -1,13 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
-import {
-	HomePage,
-	RegisterPage,
-	LoginPage,
-	ProfilePage,
-	EditProfilePage,
-} from './pages';
+import { HomePage, RegisterPage, LoginPage, ProfilePage } from './pages';
 
 function App() {
 	return (
@@ -18,7 +12,6 @@ function App() {
 					<Route exact path='/register' element={<RegisterPage />} />
 					<Route exact path='/login' element={<LoginPage />} />
 					<Route exact path='/profile' element={<ProfilePage />} />
-					<Route exact path='/profile/edit' element={<EditProfilePage />} />
 				</Routes>
 			</Router>
 		</div>

@@ -1,11 +1,19 @@
 const db = require('../models');
 const User = db.user;
+const UserBio = db.user_info;
 
 const { Op } = require('sequelize');
 
 exports.getUser = (req, res) => {
 	User.findOne({ where: { id: req.body.id } }).then((user) => {
 		res.send(user).status(200);
+	});
+};
+
+exports.getBio = (req, res) => {
+	console.log(req.body.id);
+	UserBio.findOne({ where: { id_user: req.body.id } }).then((bio) => {
+		res.send(bio).status(200);
 	});
 };
 
@@ -16,6 +24,24 @@ exports.change = (req, res) => {
 		},
 		{
 			where: { id: req.body.user_id },
+		}
+	)
+		.then(() => {
+			res.sendStatus(200);
+		})
+		.catch((err) => {
+			res.status(500).send({ message: err.message });
+		});
+};
+
+exports.changeBio = (req, res) => {
+	UserBio.update(
+		{
+			bio: req.body.bio,
+		},
+
+		{
+			where: { id_user: req.body.user_id },
 		}
 	)
 		.then(() => {

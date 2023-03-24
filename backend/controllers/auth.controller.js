@@ -1,6 +1,7 @@
 const db = require('../models');
 const config = require('../config/auth.config');
 const User = db.user;
+const UserBio = db.user_info;
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
@@ -15,10 +16,20 @@ exports.register = (req, res) => {
 		password: bcrypt.hashSync(req.body.password, 8),
 		isDeleted: '0',
 	})
-		.then(() => {
-			res.sendStatus(200);
+		.then((user) => {
+			const id_user = user.dataValues.id;
+			UserBio.create({
+				id_user: id_user,
+				bio: '',
+			})
+				.then(() => {
+					res.sendStatus(200);
+				})
+				.catch((err) => {
+					res.status(500).send({ message: err.message });
+				});
 		})
-		.catch(() => {
+		.catch((err) => {
 			res.status(500).send({ message: err.message });
 		});
 };
