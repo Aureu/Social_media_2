@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import AuthService from '../services/auth.service';
+import authService from '../services/auth.service';
 import axios from 'axios';
 
 const Navbar = () => {
@@ -9,7 +9,7 @@ const Navbar = () => {
 	const [users, setUsers] = useState([]);
 	const [user, setUser] = useState();
 
-	const currentUser = AuthService.getCurrentUser();
+	const currentUser = authService.getCurrentUser();
 
 	const handleShowNavbar = () => {
 		setShowNavbar(!showNavbar);
@@ -40,10 +40,14 @@ const Navbar = () => {
 
 	const handleSearch = async () => {
 		try {
-			const response = await axios.get(
-				`${process.env.REACT_APP_HOST}/api/user/search?q=${query}`
-			);
-			setUsers(response.data);
+			if (query.trim() !== '') {
+				const response = await axios.get(
+					`${process.env.REACT_APP_HOST}/api/user/search?q=${query}`
+				);
+				setUsers(response.data);
+			} else {
+				setUsers([]);
+			}
 		} catch (error) {
 			console.error(error);
 		}
@@ -53,21 +57,24 @@ const Navbar = () => {
 		setQuery(event.target.value);
 	};
 
+	const [showDropdown, setShowDropdown] = useState(false);
+	const handleShowDropdown = () => {
+		setShowDropdown(!showDropdown);
+	};
 	return (
 		<nav className='navbar'>
 			<div className='container'>
-				<div className='logo'>
-					<input
-						type='text'
-						value={query}
-						onChange={handleChange}
-						placeholder='Search users'
-					/>
+				<div className='left'>
+					<div className='logo'>
+						<input
+							type='text'
+							value={query}
+							onChange={handleChange}
+							placeholder='Search users'
+						/>
+					</div>
 				</div>
-				<div className='menu-icon' onClick={handleShowNavbar}>
-					<p>...</p>
-				</div>
-				<div className={`nav-elements ${showNavbar && 'active'}`}>
+				<div className='middle'>
 					<ul>
 						<li>
 							<NavLink to='/' className='nav-item'>
@@ -91,43 +98,51 @@ const Navbar = () => {
 						</li>
 					</ul>
 				</div>
-				<div className='nav-profile'>
-					<div className='profile-wrapper'>
-						<div className='profile-image'>
-							<img
-								src='img/farma_rochov.png'
-								alt=''
-								className='profile-image'
-							/>
+				<div className='right'>
+					<div className='nav-profile'>
+						{authService.getCurrentUser() ? (
+							<div className='profile-wrapper' onClick={handleShowDropdown}>
+								<span>
+									{user?.first_name} {user?.last_name}
+								</span>
+							</div>
+						) : (
+							<a
+								href='/login'
+								className='nav-button'
+								style={{ color: 'white' }}
+							>
+								Přihlásit se
+							</a>
+						)}
+
+						<div className={`profile-dropdown ${showDropdown && 'active'}`}>
+							<ul>
+								<li>
+									<NavLink to='/profile' className='nav-item'>
+										Profile
+									</NavLink>
+								</li>
+								<li>
+									<NavLink to='/settings' className='nav-item'>
+										Settings
+									</NavLink>
+								</li>
+								<li>
+									<a
+										href='/login'
+										className='nav-item'
+										onClick={authService.logout}
+									>
+										Logout
+									</a>
+								</li>
+							</ul>
 						</div>
-						<span>{user?.first_name}</span>
-					</div>
-					<div className='profile-dropdown' onClick={handleShowNavbar}>
-						<ul>
-							<li>
-								<NavLink to='/profile' className='nav-item'>
-									Profile
-								</NavLink>
-							</li>
-							<li>
-								<NavLink to='/settings' className='nav-item'>
-									Settings
-								</NavLink>
-							</li>
-							<li>
-								<a
-									href='/login'
-									className='nav-item'
-									onClick={AuthService.logout}
-								>
-									Logout
-								</a>
-							</li>
-						</ul>
 					</div>
 				</div>
 			</div>
-			<div>
+			<div className='search-results'>
 				<ul>
 					{users.map((user) => (
 						<li key={user.id}>
