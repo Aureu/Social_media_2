@@ -51,16 +51,50 @@ const ProfilePage = () => {
 		});
 	}, []);
 
+	/* MODALS */
+	const [showModal, setShowModal] = useState(false);
+
+	const handleChange = (event) => {
+		event.preventDefault();
+	};
+
+	const toggleInfoModal = () => {
+		setShowModal(!showModal);
+	};
+
+	/* CHANGE USER INFO */
+	const changeFname = useRef();
+	const changeLname = useRef();
+	const changeUsername = useRef();
+	const changeJob = useRef();
+	const changeLocation = useRef();
+
+	const changeUserData = () => {
+		const data = {
+			user_id: user.id,
+			first_name: changeFname.current.value || user.first_name,
+			last_name: changeLname.current.value || user.last_name,
+			username: changeUsername.current.value || user.username,
+			job: changeJob.current.value || user.job,
+			location: changeLocation.current.value || user.location,
+		};
+
+		axios
+			.post(`${process.env.REACT_APP_HOST}/api/user/change`, data)
+			.then(() => {
+				document.location.reload();
+			});
+	};
+
 	return (
 		<>
 			<Navbar />
-
 			<div className='profile-container'>
 				<div className='wrapper'>
 					<div className='border'>
 						<div className='profile-header'>
 							<img
-								src='img/farma_rochov.png'
+								src='profile-photo.png'
 								alt='Profile Photo'
 								className='profile-photo'
 							/>
@@ -69,15 +103,32 @@ const ProfilePage = () => {
 									{user?.first_name} {user?.last_name}
 								</h1>
 								<p>@{user?.username}</p>
-								<p>Sledujici 50</p>
-								<p>Sleduji 68</p>
+								<p>{user?.job}</p>
+								<p>{user?.location}</p>
+								<button className='edit-button' onClick={toggleInfoModal}>
+									Edit
+								</button>
 							</div>
 						</div>
 						<div className='profile-main'>
 							<div className='left'>
-								<h3>User info</h3>
-								<p>Web Developer</p>
-								<p>New York, NY</p>
+								<h3>About Me</h3>
+								<p>
+									I am a web developer with 5 years of experience. I am
+									passionate about creating websites and web applications that
+									are both functional and beautiful.
+								</p>
+								<button className='edit-button'>Edit</button>
+								<h3>Skills</h3>
+								<ul>
+									<li>HTML</li>
+									<li>CSS</li>
+									<li>JavaScript</li>
+									<li>React</li>
+									<li>Node.js</li>
+									<li>SQL</li>
+								</ul>
+								<button className='edit-button'>Edit</button>
 							</div>
 							<div className='right'>
 								<h3>Posts</h3>
@@ -87,11 +138,11 @@ const ProfilePage = () => {
 										id=''
 										cols='53'
 										rows='5'
-										placeholder='Napiste prispevek'
+										placeholder='Write a post...'
 										maxLength={500}
 										ref={content}
 									></textarea>
-									<input type='submit' value='Odeslat' />
+									<input type='submit' value='Post' />
 								</form>
 								{posts
 									?.sort(
@@ -125,6 +176,64 @@ const ProfilePage = () => {
 					</div>
 				</div>
 			</div>
+
+			{/* modals */}
+			{showModal && (
+				<div className='modal'>
+					<div className='modal-content'>
+						<h2>Edit Profile</h2>
+						<form onSubmit={changeUserData}>
+							<label>
+								First Name:
+								<input
+									type='text'
+									name='fName'
+									placeholder={user?.first_name}
+									ref={changeFname}
+								/>
+							</label>
+							<label>
+								Last Name:
+								<input
+									type='text'
+									name='lName'
+									placeholder={user?.last_name}
+									ref={changeLname}
+								/>
+							</label>
+							<label>
+								Username:
+								<input
+									type='text'
+									name='username'
+									placeholder={user?.username}
+									ref={changeUsername}
+								/>
+							</label>
+							<label>
+								Job:
+								<input
+									type='text'
+									name='job'
+									placeholder={user?.job}
+									ref={changeJob}
+								/>
+							</label>
+							<label>
+								Location:
+								<input
+									type='text'
+									name='location'
+									placeholder={user?.location}
+									ref={changeLocation}
+								/>
+							</label>
+							<input type='submit' value='Save' />
+							<button onClick={toggleInfoModal}>Cancel</button>
+						</form>
+					</div>
+				</div>
+			)}
 		</>
 	);
 };

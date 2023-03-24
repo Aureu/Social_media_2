@@ -10,6 +10,8 @@ const RegisterPage = () => {
 	const username = useRef();
 	const email = useRef();
 	const password = useRef();
+	const job = useRef();
+	const location = useRef();
 
 	const navigate = useNavigate();
 
@@ -19,6 +21,8 @@ const RegisterPage = () => {
 				first_name: fname.current.value,
 				last_name: lname.current.value,
 				username: username.current.value,
+				job: job.current.value,
+				location: location.current.value,
 				email: email.current.value,
 				password: password.current.value,
 			})
@@ -38,6 +42,10 @@ const RegisterPage = () => {
 						<input className='form__form__input' type='text' ref={lname} />
 						<label className='form__form__label'>Prezdivka</label>
 						<input className='form__form__input' type='text' ref={username} />
+						<label className='form__form__label'>Práce</label>
+						<input className='form__form__input' type='text' ref={job} />
+						<label className='form__form__label'>Lokace</label>
+						<input className='form__form__input' type='text' ref={location} />
 						<label className='form__form__label'>Email</label>
 						<input className='form__form__input' type='email' ref={email} />
 						<label className='form__form__label'>Heslo</label>

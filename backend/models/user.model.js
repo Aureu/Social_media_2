@@ -20,6 +20,12 @@ module.exports = (sequelize, Sequelize) => {
 		password: {
 			type: Sequelize.STRING,
 		},
+		location: {
+			type: Sequelize.STRING,
+		},
+		job: {
+			type: Sequelize.STRING,
+		},
 		isDeleted: {
 			type: Sequelize.BOOLEAN,
 		},

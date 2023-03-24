@@ -9,8 +9,11 @@ exports.register = (req, res) => {
 		first_name: req.body.first_name,
 		last_name: req.body.last_name,
 		username: req.body.username,
+		job: req.body.job,
+		location: req.body.location,
 		email: req.body.email,
 		password: bcrypt.hashSync(req.body.password, 8),
+		isDeleted: '0',
 	})
 		.then(() => {
 			res.sendStatus(200);
