@@ -30,7 +30,7 @@ const ProfilePage = () => {
 			`${process.env.REACT_APP_HOST}/api/post`,
 			{ user_id: currentUser.id }
 		);
-
+		console.log(response.data);
 		return response.data;
 	};
 
@@ -212,7 +212,9 @@ const ProfilePage = () => {
 											<div class='post'>
 												<div class='post-header'>
 													<div class='post-icon'></div>
-													<div class='post-author'>John Doe</div>
+													<div class='post-author'>
+														{post.user.first_name} {post.user.last_name}
+													</div>
 													<div class='post-date'>{formattedDate}</div>
 												</div>
 												<div class='post-content'>{post.content}</div>

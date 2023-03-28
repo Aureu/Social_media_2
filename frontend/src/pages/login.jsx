@@ -1,7 +1,6 @@
 import { useRef } from 'react';
 import AuthService from '../services/auth.service';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
 
 const LoginPage = () => {
 	const user = useRef();

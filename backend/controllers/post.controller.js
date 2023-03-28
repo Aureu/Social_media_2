@@ -1,8 +1,17 @@
 const db = require('../models');
 const Post = db.post;
+const User = db.user;
 
 exports.get = (req, res) => {
-	Post.findAll({ where: { id_user: req.body.user_id } }).then((posts) => {
+	Post.findAll({
+		where: { id_user: req.body.user_id },
+		include: [
+			{
+				model: User,
+				attributes: ['first_name', 'last_name'],
+			},
+		],
+	}).then((posts) => {
 		res.send(posts).status(200);
 	});
 };
