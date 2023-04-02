@@ -222,6 +222,36 @@ button {
 	}
 }
 
+.dropdown {
+	position: relative;
+	display: inline-block;
+
+	.nav-item {
+		cursor: pointer;
+	}
+
+	.dropdown-content {
+		display: block;
+		position: absolute;
+		top: 100%;
+		z-index: 1;
+		min-width: 200px;
+		padding: 8px 0;
+		border-radius: 4px;
+		box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+		background-color: #fff;
+
+		.notification {
+			padding: 8px;
+			cursor: pointer;
+
+			&:hover {
+				background-color: #f5f5f5;
+			}
+		}
+	}
+}
+
 .search-results {
 	position: absolute;
 	top: 60px;

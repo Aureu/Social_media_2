@@ -1,5 +1,6 @@
 const db = require('../models');
 const Follower = db.follower;
+const Notification = db.notification;
 const User = db.user;
 
 /* exports.get = (req, res) => {
@@ -25,6 +26,14 @@ exports.create = async (req, res) => {
 		const follow = await Follower.create({
 			id_follower_user: followedUser.id,
 			id_following_user: followingUser.id,
+		});
+
+		// Create a new notification
+		await Notification.create({
+			id_user: followedUser.id,
+			id_source: followingUser.id,
+			type: 'follow',
+			description: `${followingUser.username} is now following you.`,
 		});
 
 		res.status(201).json(follow);

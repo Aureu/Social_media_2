@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
-
 import authService from '../services/auth.service';
 import axios from 'axios';
 
@@ -9,6 +8,7 @@ const Navbar = () => {
 	const [query, setQuery] = useState('');
 	const [users, setUsers] = useState([]);
 	const [user, setUser] = useState();
+	const [notifications, setNotifications] = useState([]);
 
 	const currentUser = authService.getCurrentUser();
 
@@ -25,9 +25,23 @@ const Navbar = () => {
 		return response.data;
 	};
 
+	const fetchNotifications = async () => {
+		const response = await axios.post(
+			`${process.env.REACT_APP_HOST}/api/notifications/get`,
+			{ id_user: currentUser.id }
+		);
+		return response.data;
+	};
+
 	useEffect(() => {
 		fetchUser().then((user) => {
 			setUser(user);
+		});
+	}, []);
+
+	useEffect(() => {
+		fetchNotifications().then((notifications) => {
+			setNotifications(notifications);
 		});
 	}, []);
 
@@ -63,6 +77,12 @@ const Navbar = () => {
 	const handleShowDropdown = () => {
 		setShowDropdown(!showDropdown);
 	};
+
+	const [notifDropdown, setNotifDropdown] = useState(false);
+	const handleShowNotificationDropdown = () => {
+		setNotifDropdown(!notifDropdown);
+	};
+
 	return (
 		<nav className='navbar'>
 			<div className='container'>
@@ -94,9 +114,23 @@ const Navbar = () => {
 							</NavLink>
 						</li>
 						<li>
-							<NavLink to='/notifications' className='nav-item'>
-								Notifications
-							</NavLink>
+							<div className='dropdown'>
+								<div
+									className='nav-item'
+									onClick={handleShowNotificationDropdown}
+								>
+									Notifications ({notifications.length})
+								</div>
+								{notifDropdown && (
+									<div className='dropdown-content'>
+										{notifications.map((notification) => (
+											<div key={notification.id} className='notification'>
+												<p>{notification.description}</p>
+											</div>
+										))}
+									</div>
+								)}
+							</div>
 						</li>
 					</ul>
 				</div>

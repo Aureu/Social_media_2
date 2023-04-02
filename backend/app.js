@@ -26,6 +26,7 @@ require('./routes/user.route')(app);
 require('./routes/post.route')(app);
 require('./routes/comment.route')(app);
 require('./routes/follower.route')(app);
+require('./routes/notification.route')(app);
 
 // set port
 const PORT = process.env.PORT || 8080;
