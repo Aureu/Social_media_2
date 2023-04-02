@@ -7,8 +7,9 @@ const db = require('./models');
 
 const User = db.user;
 
-db.sequelize.sync({ force: true }).then(() => {
-	console.log('Drop and Resync DB');
+// Remove the "force: true" option from the sync method
+db.sequelize.sync().then(() => {
+	console.log('Database is connected');
 	initial();
 });
 
@@ -24,18 +25,12 @@ require('./routes/auth.route')(app);
 require('./routes/user.route')(app);
 require('./routes/post.route')(app);
 require('./routes/comment.route')(app);
+require('./routes/follower.route')(app);
 
 // set port
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
 	console.log(`Server is running on port ${PORT}.`);
 });
-function initial() {
-	User.create({
-		first_name: 'John',
-		last_name: 'Doe',
-		username: 'test',
-		email: 'john@example.com',
-		password: 'test',
-	});
-}
+
+function initial() {}

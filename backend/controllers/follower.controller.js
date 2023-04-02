@@ -1,5 +1,6 @@
 const db = require('../models');
 const Follower = db.follower;
+const User = db.user;
 
 /* exports.get = (req, res) => {
 	Follower.findAll({ where: { id_post: req.body.post_id } }).then((comments) => {
@@ -7,15 +8,47 @@ const Follower = db.follower;
 	});
 }; */
 
-exports.create = (req, res) => {
-	Follower.create({
-		id_following_user: req.body.following_id,
-		id_follower_user: req.body.follower_id,
-	})
-		.then(() => {
-			res.sendStatus(200);
-		})
-		.catch((err) => {
-			res.status(500).send({ message: err.message });
+exports.create = async (req, res) => {
+	try {
+		const { id } = req.params;
+		const { userId } = req.body;
+
+		console.log(`User ${userId} is following user ${id}.`);
+
+		// Find the user that is being followed
+		const followedUser = await User.findByPk(id);
+
+		// Find the user that is following
+		const followingUser = await User.findByPk(userId);
+
+		// Create a new follow relationship between the two users
+		const follow = await Follower.create({
+			id_follower_user: followedUser.id,
+			id_following_user: followingUser.id,
 		});
+
+		res.status(201).json(follow);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ error: 'Unable to follow user.' });
+	}
+};
+
+exports.getFollow = async (req, res) => {
+	try {
+		const { id } = req.params;
+		const { userId } = req.body;
+
+		const follow = await Follower.findOne({
+			where: {
+				id_follower_user: id,
+				id_following_user: userId,
+			},
+		});
+
+		res.status(200).json(follow);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ error: 'Unable to check follow status.' });
+	}
 };

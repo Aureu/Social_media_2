@@ -9,5 +9,6 @@ module.exports = function (app) {
 		next();
 	});
 
-	app.post('/api/follow', controller.create);
+	app.post('/api/users/:id/follow', controller.create);
+	app.post('/api/users/:id/check-follow', controller.getFollow);
 };

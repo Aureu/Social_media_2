@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
+
 import authService from '../services/auth.service';
 import axios from 'axios';
 
@@ -42,7 +43,8 @@ const Navbar = () => {
 		try {
 			if (query.trim() !== '') {
 				const response = await axios.get(
-					`${process.env.REACT_APP_HOST}/api/user/search?q=${query}`
+					`${process.env.REACT_APP_HOST}/api/user/search?q=${query}`,
+					{ id: currentUser.id }
 				);
 				setUsers(response.data);
 			} else {
@@ -146,7 +148,8 @@ const Navbar = () => {
 				<ul>
 					{users.map((user) => (
 						<li key={user.id}>
-							{user.first_name} {user.last_name}
+							{user.first_name} {user.last_name}{' '}
+							<Link to={`/profile/${user.id}`}>Zobrazit</Link>
 						</li>
 					))}
 				</ul>
