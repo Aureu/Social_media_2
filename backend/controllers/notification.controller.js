@@ -2,10 +2,9 @@ const db = require('../models');
 const Notification = db.notification;
 
 exports.get = (req, res) => {
-	const { id_user } = req.body;
-
 	Notification.findAll({
-		where: { id_user },
+		where: { id_user: req.body.id_user },
+		order: [['createdAt', 'DESC']], // Sort by createdAt column in descending order
 	})
 		.then((notifications) => {
 			res.send(notifications).status(200);

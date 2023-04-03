@@ -1,8 +1,8 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-import Navbar from '../components/Navbar';
+import AuthService from '../services/auth.service';
 
 const RegisterPage = () => {
 	const fname = useRef();
@@ -13,11 +13,14 @@ const RegisterPage = () => {
 	const job = useRef();
 	const location = useRef();
 
+	const [error, setError] = useState('');
+
 	const navigate = useNavigate();
 
-	const submitRegister = () => {
-		axios
-			.post(`${process.env.REACT_APP_HOST}/api/auth/register`, {
+	const submitRegister = async (e) => {
+		e.preventDefault();
+		try {
+			await axios.post(`${process.env.REACT_APP_HOST}/api/auth/register`, {
 				first_name: fname.current.value,
 				last_name: lname.current.value,
 				username: username.current.value,
@@ -25,8 +28,11 @@ const RegisterPage = () => {
 				location: location.current.value,
 				email: email.current.value,
 				password: password.current.value,
-			})
-			.then(navigate('/login'));
+			});
+			navigate('/');
+		} catch (error) {
+			setError('Registration failed. Username or email may already be in use.');
+		}
 	};
 
 	return (
@@ -34,12 +40,18 @@ const RegisterPage = () => {
 			<div className='form-container'>
 				<div className='form'>
 					<h2 className='form__title'>Registrace</h2> <br />
-					<br />
+					{error && <div className='error-message'>{error}</div>}
 					<form onSubmit={submitRegister} className='form__form'>
-						<label className='form__form__label'>Jmeno</label>
-						<input className='form__form__input' type='text' ref={fname} />
-						<label className='form__form__label'>Prijmeni</label>
-						<input className='form__form__input' type='text' ref={lname} />
+						<div className='form__form__row'>
+							<div>
+								<label className='form__form__label'>Jmeno</label>
+								<input className='form__form__input' type='text' ref={fname} />
+							</div>
+							<div>
+								<label className='form__form__label'>Prijmeni</label>
+								<input className='form__form__input' type='text' ref={lname} />
+							</div>
+						</div>
 						<label className='form__form__label'>Prezdivka</label>
 						<input className='form__form__input' type='text' ref={username} />
 						<label className='form__form__label'>Práce</label>
@@ -62,7 +74,7 @@ const RegisterPage = () => {
 					</form>
 					<p>
 						Máte již účet?
-						<a href='/login' className='form__register-link'>
+						<a href='/' className='form__register-link'>
 							Login
 						</a>
 					</p>

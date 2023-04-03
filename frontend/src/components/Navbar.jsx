@@ -165,11 +165,7 @@ const Navbar = () => {
 									</NavLink>
 								</li>
 								<li>
-									<a
-										href='/login'
-										className='nav-item'
-										onClick={authService.logout}
-									>
+									<a href='/' className='nav-item' onClick={authService.logout}>
 										Logout
 									</a>
 								</li>

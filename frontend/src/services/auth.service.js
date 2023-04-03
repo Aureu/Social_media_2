@@ -22,13 +22,32 @@ class AuthService {
 		localStorage.removeItem('user');
 	}
 
-	register(username, email, password) {
-		return axios.post(API_URL + 'register', {
-			username,
-			email,
-			password,
-		});
-	}
+	register = async (
+		first_name,
+		last_name,
+		username,
+		job,
+		location,
+		email,
+		password
+	) => {
+		try {
+			const response = await axios.post(API_URL + 'signup', {
+				first_name,
+				last_name,
+				username,
+				job,
+				location,
+				email,
+				password,
+			});
+
+			return response.data;
+		} catch (error) {
+			console.error('Register error:', error);
+			throw error;
+		}
+	};
 
 	getCurrentUser() {
 		return JSON.parse(localStorage.getItem('user'));
