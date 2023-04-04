@@ -31,25 +31,21 @@ const LoginPage = () => {
 		<>
 			<div className='form-container'>
 				<div className='form'>
-					<h2 className='form__title'>Prihlaseni</h2>
+					<h2 className='form__title'>Login</h2>
 
 					{error && <p className='error-message'>{error}</p>}
 					<form className='form__form' onSubmit={handleLogin}>
-						<label className='form__form__label'>Prezdivku</label>
+						<label className='form__form__label'>Username</label>
 						<input className='form__form__input' type='text' ref={user} />
-						<label className='form__form__label'>Heslo</label>
+						<label className='form__form__label'>Password</label>
 						<input className='form__form__input' type='password' ref={pass} />
-						<input
-							className='form__form__submit'
-							type='submit'
-							value='Prihlasit se'
-						/>
+						<input className='form__form__submit' type='submit' value='Login' />
 					</form>
 					<br />
 					<p>
-						Nemáte účet?
+						You don't have account?
 						<a className='form__register-link' href='/register'>
-							Registrovat
+							Create one!
 						</a>
 					</p>
 				</div>

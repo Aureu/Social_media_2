@@ -7,6 +7,9 @@ import BioModal from '../components/BioModal';
 
 import Navbar from '../components/Navbar';
 
+import WorkIcon from '@mui/icons-material/Work';
+import PublicIcon from '@mui/icons-material/Public';
+
 const ProfilePage = () => {
 	const currentUser = AuthService.getCurrentUser();
 
@@ -140,8 +143,18 @@ const ProfilePage = () => {
 									{user?.first_name} {user?.last_name}
 								</h1>
 								<p>@{user?.username}</p>
-								<p>{user?.job}</p>
-								<p>{user?.location}</p>
+								<p>
+									<span>
+										<WorkIcon />
+									</span>{' '}
+									{user?.job}
+								</p>
+								<p>
+									<span>
+										<PublicIcon />
+									</span>{' '}
+									{user?.location}
+								</p>
 								<button className='edit-button' onClick={toggleInfoModal}>
 									Edit
 								</button>
