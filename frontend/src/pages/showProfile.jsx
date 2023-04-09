@@ -3,6 +3,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import AuthService from '../services/auth.service';
 
+import WorkIcon from '@mui/icons-material/Work';
+import PublicIcon from '@mui/icons-material/Public';
+
 import Navbar from '../components/Navbar';
 
 function ShowProfilePage() {
@@ -14,6 +17,9 @@ function ShowProfilePage() {
 	const [posts, setPosts] = useState();
 	const [bio, setBio] = useState();
 	const [isFollowing, setIsFollowing] = useState(false);
+
+	const [followers, setFollowers] = useState();
+	const [followings, setFollowings] = useState();
 
 	const fetchPost = async () => {
 		const response = await axios.post(
@@ -72,6 +78,36 @@ function ShowProfilePage() {
 		}
 	};
 
+	const fetchFollowers = async () => {
+		const response = await axios.post(
+			`${process.env.REACT_APP_HOST}/api/users/get-followers`,
+			{ id_user: id }
+		);
+
+		return response.data;
+	};
+
+	const fetchFollowings = async () => {
+		const response = await axios.post(
+			`${process.env.REACT_APP_HOST}/api/users/get-followings`,
+			{ id_user: id }
+		);
+
+		return response.data;
+	};
+
+	useEffect(() => {
+		fetchFollowings().then((following) => {
+			setFollowings(following);
+		});
+	}, []);
+
+	useEffect(() => {
+		fetchFollowers().then((follower) => {
+			setFollowers(follower);
+		});
+	}, []);
+
 	useEffect(() => {
 		fetchBio().then((bio) => {
 			setBio(bio);
@@ -112,8 +148,20 @@ function ShowProfilePage() {
 									{user?.first_name} {user?.last_name}
 								</h1>
 								<p>@{user?.username}</p>
-								<p>{user?.job}</p>
-								<p>{user?.location}</p>
+								<p>
+									<span>
+										<WorkIcon />
+									</span>{' '}
+									{user?.job}
+								</p>
+								<p>
+									<span>
+										<PublicIcon />
+									</span>{' '}
+									{user?.location}
+								</p>
+								<p>Followers: {followers?.length}</p>
+								<p>Following: {followings?.length}</p>
 								<button onClick={handleFollowClick} disabled={isFollowing}>
 									{isFollowing ? 'Following' : 'Follow'}
 								</button>

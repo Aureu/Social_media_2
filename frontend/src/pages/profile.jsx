@@ -115,8 +115,8 @@ const ProfilePage = () => {
 	const changeFname = useRef();
 	const changeLname = useRef();
 	const changeUsername = useRef();
-	const changeJob = useRef();
-	const changeLocation = useRef();
+	const [selectedCountry, setSelectedCountry] = useState(null);
+	const [selectedJob, setSelectedJob] = useState(null);
 
 	const changeUserData = () => {
 		const data = {
@@ -124,10 +124,10 @@ const ProfilePage = () => {
 			first_name: changeFname.current.value || user.first_name,
 			last_name: changeLname.current.value || user.last_name,
 			username: changeUsername.current.value || user.username,
-			job: changeJob.current.value || user.job,
-			location: changeLocation.current.value || user.location,
+			job: selectedJob ? selectedJob.label : user.job,
+			location: selectedCountry ? selectedCountry.label : user.location,
 		};
-
+		console.log(data);
 		axios
 			.post(`${process.env.REACT_APP_HOST}/api/user/change`, data)
 			.then(() => {
@@ -155,6 +155,14 @@ const ProfilePage = () => {
 			.then(() => {
 				document.location.reload();
 			});
+	};
+
+	const handleCountryChange = (selectedOption) => {
+		setSelectedCountry(selectedOption);
+	};
+
+	const handleJobChange = (selectedOption) => {
+		setSelectedJob(selectedOption);
 	};
 
 	return (
@@ -198,9 +206,11 @@ const ProfilePage = () => {
 									changeFname={changeFname}
 									changeLname={changeLname}
 									changeUsername={changeUsername}
-									changeJob={changeJob}
-									changeLocation={changeLocation}
+									changeJob={setSelectedJob}
+									changeLocation={setSelectedCountry}
 									user={user}
+									handleCountryChange={handleCountryChange}
+									handleJobChange={handleJobChange}
 								/>
 							</div>
 						</div>

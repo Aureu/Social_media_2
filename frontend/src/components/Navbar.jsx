@@ -115,7 +115,7 @@ const Navbar = () => {
 						</li>
 						<li>
 							<NavLink to='/friends' className='nav-item'>
-								Friends
+								Following
 							</NavLink>
 						</li>
 						<li>

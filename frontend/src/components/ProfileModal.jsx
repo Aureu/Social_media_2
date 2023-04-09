@@ -1,4 +1,7 @@
 import React from 'react';
+import Select from 'react-select';
+import countries from '../countries.js';
+import jobPositions from '../jobPositions.js';
 
 function ProfileModal({
 	showModal,
@@ -7,8 +10,8 @@ function ProfileModal({
 	changeFname,
 	changeLname,
 	changeUsername,
-	changeJob,
-	changeLocation,
+	handleCountryChange,
+	handleJobChange,
 	user,
 }) {
 	return (
@@ -47,20 +50,18 @@ function ProfileModal({
 							</label>
 							<label>
 								Job:
-								<input
-									type='text'
-									name='job'
+								<Select
+									options={jobPositions}
 									placeholder={user?.job}
-									ref={changeJob}
+									onChange={handleJobChange}
 								/>
 							</label>
 							<label>
 								Location:
-								<input
-									type='text'
-									name='location'
+								<Select
+									options={countries}
 									placeholder={user?.location}
-									ref={changeLocation}
+									onChange={handleCountryChange}
 								/>
 							</label>
 							<input type='submit' value='Save' />
