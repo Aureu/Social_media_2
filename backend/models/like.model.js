@@ -13,6 +13,14 @@ module.exports = (sequelize, Sequelize) => {
 			type: Sequelize.INTEGER,
 			foreignKey: true,
 		},
+		id_comment: {
+			type: Sequelize.INTEGER,
+			foreignKey: true,
+		},
+		type: {
+			type: Sequelize.ENUM('post', 'comment'),
+			allowNull: false,
+		},
 	});
 	return Like;
 };

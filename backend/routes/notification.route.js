@@ -10,4 +10,5 @@ module.exports = function (app) {
 	});
 
 	app.post('/api/notifications/get', controller.get);
+	app.post('/api/notification/viewed', controller.markNotificationAsViewed);
 };

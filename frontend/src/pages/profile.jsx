@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import AuthService from '../services/auth.service';
 import axios from 'axios';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
 import ProfileModal from '../components/ProfileModal';
 import BioModal from '../components/BioModal';
@@ -25,6 +26,10 @@ const ProfilePage = () => {
 
 	const [likesCount, setLikesCount] = useState(0);
 	const [isLikedByPost, setIsLikedByPost] = useState({});
+
+	const [openedPostId, setOpenedPostId] = useState(null);
+	const [comment, setComment] = useState('');
+	const [comments, setComments] = useState([]);
 
 	const content = useRef();
 
@@ -200,15 +205,83 @@ const ProfilePage = () => {
 		}
 	};
 
-	const handleComment = (postId) => {
-		// Open a comment modal or expand a comment section to add a new comment
-		console.log(postId);
-	};
-
 	const handleShare = (postId) => {
 		// Share the post on social media or copy the post link to the clipboard
 		console.log(postId);
 	};
+
+	const fetchComments = async (postId) => {
+		try {
+			const response = await axios.post(
+				`${process.env.REACT_APP_HOST}/api/comment`,
+				{
+					postId: postId,
+				}
+			);
+
+			// Update the comments state with the fetched data
+			setComments(response.data);
+		} catch (error) {
+			console.error('Error fetching comments:', error);
+		}
+	};
+
+	const handleComment = async (postId) => {
+		if (openedPostId === postId) {
+			setOpenedPostId(null);
+		} else {
+			setOpenedPostId(postId);
+			await fetchComments(postId); // Fetch the comments for this post
+		}
+	};
+
+	const handleSubmitComment = async (postId) => {
+		try {
+			const response = await axios.post(
+				`${process.env.REACT_APP_HOST}/api/comment/create`,
+				{
+					postId,
+					userId: user.id,
+					content: comment,
+				}
+			);
+
+			setComment(''); // Reset the comment input field
+
+			await fetchComments(postId);
+		} catch (error) {
+			console.error('Error submitting the comment:', error);
+		}
+	};
+
+	const handleLikeComment = async (commentId) => {
+		try {
+			// Call your API to like/unlike the post
+			const response = await axios.post(
+				`${process.env.REACT_APP_HOST}/api/comment/like`,
+				{
+					commentId,
+					userId: user.id,
+				}
+			);
+
+			fetchComments(commentId);
+			// Check if the post was liked or unliked
+			if (response.data.liked) {
+				setLikesCount((prevCount) => prevCount + 1);
+				setIsLikedByPost((prevState) => ({ ...prevState, [commentId]: true }));
+			} else {
+				setLikesCount((prevCount) => prevCount - 1);
+				setIsLikedByPost((prevState) => ({ ...prevState, [commentId]: false }));
+			}
+		} catch (error) {
+			console.error('Error liking the post:', error);
+		}
+	};
+
+	const handleReply = () => {};
+
+	const isLikedByComment = () => {};
 
 	return (
 		<>
@@ -356,12 +429,83 @@ const ProfilePage = () => {
 													</button>
 
 													<button onClick={() => handleComment(post.id)}>
-														Comment
+														{openedPostId === post.id
+															? 'Hide Comments'
+															: 'Comment'}
 													</button>
 													<button onClick={() => handleShare(post.id)}>
 														Share
 													</button>
 												</div>
+												{/* Comments Section */}
+												{openedPostId === post.id && (
+													<div class='comments-section'>
+														{comments.map((comment) => {
+															const date = new Date(comment.createdAt);
+															const timeAgo = formatDistanceToNow(date, {
+																addSuffix: true,
+															});
+
+															return (
+																<div key={comment?.id} class='comment'>
+																	<div class='comment-header'>
+																		<div class='comment-icon'>
+																			<img
+																				alt={'profile picture'}
+																				src={`${process.env.REACT_APP_HOST}/upload/${user.id}.webp`}
+																				onError={({ currentTarget }) => {
+																					currentTarget.onerror = null; // prevents looping
+																					currentTarget.src = `${process.env.REACT_APP_HOST}/upload/noimage.webp`;
+																				}}
+																			></img>
+																		</div>
+																		<div class='comment-author'>
+																			{comment?.user.first_name}{' '}
+																			{comment?.user.last_name}
+																		</div>
+																		<div class='comment-date'>{timeAgo}</div>
+																	</div>
+																	<div class='comment-content'>
+																		{comment.content}
+																	</div>
+																	<div class='comment-footer'>
+																		<button
+																			onClick={() =>
+																				handleLikeComment(comment.id)
+																			}
+																			className={
+																				isLikedByComment[comment.id]
+																					? 'liked'
+																					: ''
+																			}
+																		>
+																			Like {comment?.likesCount}
+																		</button>
+																		<button
+																			onClick={() => handleReply(comment.id)}
+																		>
+																			Reply
+																		</button>
+																	</div>
+																</div>
+															);
+														})}
+														<form
+															onSubmit={(e) => {
+																e.preventDefault();
+																handleSubmitComment(post.id);
+															}}
+														>
+															<input
+																type='text'
+																value={comment}
+																onChange={(e) => setComment(e.target.value)}
+																placeholder='Add a comment...'
+															/>
+															<button type='submit'>Post</button>
+														</form>
+													</div>
+												)}
 											</div>
 										);
 									})}

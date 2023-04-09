@@ -87,7 +87,7 @@ exports.toggleLike = async (req, res) => {
 			await Like.destroy({ where: { id: existingLike.id } });
 			res.status(200).send({ liked: false });
 		} else {
-			await Like.create({ id_post, id_user });
+			await Like.create({ id_post, id_user, type: 'post' });
 
 			// Fetch user data to get the username
 			const user = await User.findByPk(id_user);

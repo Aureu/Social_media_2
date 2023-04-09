@@ -19,6 +19,10 @@ module.exports = (sequelize, Sequelize) => {
 		description: {
 			type: Sequelize.STRING,
 		},
+		viewed: {
+			type: Sequelize.BOOLEAN,
+			defaultValue: false,
+		},
 	});
 	return Like;
 };

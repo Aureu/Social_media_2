@@ -24,6 +24,8 @@ function ShowProfilePage() {
 	const [isLikedByPost, setIsLikedByPost] = useState({});
 	const [likesCount, setLikesCount] = useState(0);
 
+	const [comment, setComment] = useState('');
+
 	const fetchPosts = async () => {
 		try {
 			const response = await axios.post(
@@ -77,6 +79,8 @@ function ShowProfilePage() {
 				userId: currentUser.id,
 			});
 
+			window.location.reload();
+
 			// If the request is successful, update the state to show that the user is being followed
 			setIsFollowing(true);
 		} catch (error) {
@@ -101,6 +105,24 @@ function ShowProfilePage() {
 		);
 
 		return response.data;
+	};
+
+	const handleSubmitComment = async (postId) => {
+		try {
+			await axios.post(
+				`${process.env.REACT_APP_HOST}/api/post/create-comment`,
+				{
+					postId,
+					userId: user.id,
+					content: comment,
+				}
+			);
+
+			setComment(''); // Reset the comment input field
+			// Reload or update your comments list here
+		} catch (error) {
+			console.error('Error submitting the comment:', error);
+		}
 	};
 
 	useEffect(() => {

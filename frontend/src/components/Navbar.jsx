@@ -74,6 +74,28 @@ const Navbar = () => {
 		}
 	};
 
+	const handleNotificationClick = async (notificationId) => {
+		try {
+			// Call the API to mark the notification as viewed
+			await axios.post(
+				`${process.env.REACT_APP_HOST}/api/notification/viewed`,
+				{
+					notificationId,
+				}
+			);
+
+			// Remove the notification from the list
+			setNotifications((prevNotifications) =>
+				prevNotifications.filter(
+					(notification) => notification.id !== notificationId
+				)
+			);
+			window.location.reload();
+		} catch (error) {
+			console.error('Error marking the notification as viewed:', error);
+		}
+	};
+
 	const handleChange = (event) => {
 		setQuery(event.target.value);
 	};
@@ -131,7 +153,12 @@ const Navbar = () => {
 										{notifications.map((notification) => (
 											<div key={notification.id} className='notification'>
 												<p>
-													<Link to={`/profile/${notification.id_source}`}>
+													<Link
+														to={`/profile/${notification.id_source}`}
+														onClick={() =>
+															handleNotificationClick(notification.id)
+														}
+													>
 														{notification.description}
 													</Link>{' '}
 												</p>
