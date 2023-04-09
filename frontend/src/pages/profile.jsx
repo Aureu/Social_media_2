@@ -11,6 +11,7 @@ import Navbar from '../components/Navbar';
 import WorkIcon from '@mui/icons-material/Work';
 import PublicIcon from '@mui/icons-material/Public';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import ChangeProfileImage from '../components/ChangeProfileImage';
 
@@ -279,6 +280,32 @@ const ProfilePage = () => {
 		}
 	};
 
+	const handleRemovePost = (postId) => {
+		axios
+			.post(`${process.env.REACT_APP_HOST}/api/post/delete/${postId}`)
+			.then((response) => {
+				// If the request is successful, you can update the UI accordingly
+				console.log(`Post ${postId} removed successfully`);
+				window.location.reload();
+			})
+			.catch((error) => {
+				console.error(`Error removing post ${postId}:`, error);
+			});
+	};
+
+	const handleRemoveComment = (commentId) => {
+		axios
+			.post(`${process.env.REACT_APP_HOST}/api/comment/delete/${commentId}`)
+			.then((response) => {
+				// If the request is successful, you can update the UI accordingly
+				console.log(`Comment ${commentId} removed successfully`);
+				window.location.reload();
+			})
+			.catch((error) => {
+				console.error(`Error removing post ${commentId}:`, error);
+			});
+	};
+
 	const handleReply = () => {};
 
 	const isLikedByComment = () => {};
@@ -418,6 +445,9 @@ const ProfilePage = () => {
 														{post.user.first_name} {post.user.last_name}
 													</div>
 													<div class='post-date'>{formattedDate}</div>
+													<span onClick={() => handleRemovePost(post.id)}>
+														<DeleteForeverIcon />
+													</span>
 												</div>
 												<div class='post-content'>{post.content}</div>
 												<div class='post-footer'>
@@ -427,11 +457,11 @@ const ProfilePage = () => {
 													>
 														Like {post.likesCount}
 													</button>
-
 													<button onClick={() => handleComment(post.id)}>
 														{openedPostId === post.id
 															? 'Hide Comments'
-															: 'Comment'}
+															: 'Comment'}{' '}
+														{post.commentsCount}
 													</button>
 													<button onClick={() => handleShare(post.id)}>
 														Share
@@ -464,6 +494,13 @@ const ProfilePage = () => {
 																			{comment?.user.last_name}
 																		</div>
 																		<div class='comment-date'>{timeAgo}</div>
+																		<span
+																			onClick={() =>
+																				handleRemoveComment(comment.id)
+																			}
+																		>
+																			<DeleteForeverIcon />
+																		</span>
 																	</div>
 																	<div class='comment-content'>
 																		{comment.content}

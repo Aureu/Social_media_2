@@ -15,7 +15,7 @@ module.exports = function (app) {
 
 	app.post('/api/post/edit', controller.change);
 
-	app.post('/api/post/delete', controller.delete);
-
 	app.post('/api/post/like', controller.toggleLike);
+
+	app.post('/api/post/delete/:postId', controller.delete);
 };

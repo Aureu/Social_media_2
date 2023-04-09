@@ -126,17 +126,13 @@ const Navbar = () => {
 				<div className='middle'>
 					<ul>
 						<li>
-							<NavLink to='/' className='nav-item'>
+							<NavLink to='/home' className='nav-item'>
 								Home
 							</NavLink>
 						</li>
+
 						<li>
-							<NavLink to='/messages' className='nav-item'>
-								Messages
-							</NavLink>
-						</li>
-						<li>
-							<NavLink to='/friends' className='nav-item'>
+							<NavLink to='/followings' className='nav-item'>
 								Following
 							</NavLink>
 						</li>

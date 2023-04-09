@@ -49,9 +49,18 @@ db.post.hasMany(db.like, {
 	as: 'likes',
 });
 
+db.post.hasMany(db.comment, {
+	foreignKey: 'id_post',
+	as: 'comments',
+});
+
 // COMMENT RELATIONS
 db.comment.belongsTo(db.user, {
 	foreignKey: 'id_user',
+});
+
+db.comment.belongsTo(db.post, {
+	foreignKey: 'id_post',
 });
 
 db.comment.belongsTo(db.comment, {

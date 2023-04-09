@@ -2,9 +2,11 @@ import { useParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import AuthService from '../services/auth.service';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
 import WorkIcon from '@mui/icons-material/Work';
 import PublicIcon from '@mui/icons-material/Public';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import Navbar from '../components/Navbar';
 
@@ -22,9 +24,12 @@ function ShowProfilePage() {
 	const [followings, setFollowings] = useState();
 
 	const [isLikedByPost, setIsLikedByPost] = useState({});
+	const [isLikedByComment, setIsLikedByComment] = useState({});
 	const [likesCount, setLikesCount] = useState(0);
 
+	const [openedPostId, setOpenedPostId] = useState(null);
 	const [comment, setComment] = useState('');
+	const [comments, setComments] = useState([]);
 
 	const fetchPosts = async () => {
 		try {
@@ -107,24 +112,6 @@ function ShowProfilePage() {
 		return response.data;
 	};
 
-	const handleSubmitComment = async (postId) => {
-		try {
-			await axios.post(
-				`${process.env.REACT_APP_HOST}/api/post/create-comment`,
-				{
-					postId,
-					userId: user.id,
-					content: comment,
-				}
-			);
-
-			setComment(''); // Reset the comment input field
-			// Reload or update your comments list here
-		} catch (error) {
-			console.error('Error submitting the comment:', error);
-		}
-	};
-
 	useEffect(() => {
 		fetchFollowings().then((following) => {
 			setFollowings(following);
@@ -184,15 +171,106 @@ function ShowProfilePage() {
 		}
 	};
 
-	const handleComment = (postId) => {
-		// Open a comment modal or expand a comment section to add a new comment
-		console.log(postId);
-	};
-
 	const handleShare = (postId) => {
 		// Share the post on social media or copy the post link to the clipboard
 		console.log(postId);
 	};
+
+	const fetchComments = async (postId) => {
+		try {
+			const response = await axios.post(
+				`${process.env.REACT_APP_HOST}/api/comment`,
+				{
+					postId: postId,
+				}
+			);
+
+			// Update the comments state with the fetched data
+			setComments(response.data);
+		} catch (error) {
+			console.error('Error fetching comments:', error);
+		}
+	};
+
+	const handleSubmitComment = async (postId) => {
+		try {
+			const response = await axios.post(
+				`${process.env.REACT_APP_HOST}/api/comment/create`,
+				{
+					postId,
+					userId: currentUser.id,
+					content: comment,
+				}
+			);
+
+			setComment(''); // Reset the comment input field
+
+			await fetchComments(postId);
+		} catch (error) {
+			console.error('Error submitting the comment:', error);
+		}
+	};
+
+	const handleComment = async (postId) => {
+		if (openedPostId === postId) {
+			setOpenedPostId(null);
+		} else {
+			setOpenedPostId(postId);
+			await fetchComments(postId); // Fetch the comments for this post
+		}
+	};
+
+	const handleLikeComment = async (commentId) => {
+		try {
+			// Call your API to like/unlike the comment
+			const response = await axios.post(
+				`${process.env.REACT_APP_HOST}/api/comment/like`,
+				{
+					commentId,
+					userId: user.id,
+				}
+			);
+
+			// Check if the comment was liked or unliked
+			if (response.data.liked) {
+				setLikesCount((prevCount) => ({
+					...prevCount,
+					[commentId]: prevCount[commentId] ? prevCount[commentId] + 1 : 1,
+				}));
+				setIsLikedByComment((prevState) => ({
+					...prevState,
+					[commentId]: true,
+				}));
+			} else {
+				setLikesCount((prevCount) => ({
+					...prevCount,
+					[commentId]: prevCount[commentId] ? prevCount[commentId] - 1 : 0,
+				}));
+				setIsLikedByComment((prevState) => ({
+					...prevState,
+					[commentId]: false,
+				}));
+			}
+		} catch (error) {
+			console.error('Error liking the comment:', error);
+		}
+	};
+
+	const handleRemoveComment = (commentId) => {
+		axios
+			.post(`${process.env.REACT_APP_HOST}/api/comment/delete/${commentId}`)
+			.then((response) => {
+				// If the request is successful, you can update the UI accordingly
+				console.log(`Comment ${commentId} removed successfully`);
+				window.location.reload();
+			})
+			.catch((error) => {
+				console.error(`Error removing post ${commentId}:`, error);
+			});
+	};
+
+	const handleReply = () => {};
+
 	return (
 		<>
 			<Navbar />
@@ -286,16 +364,101 @@ function ShowProfilePage() {
 														onClick={() => handleLike(post.id)}
 														className={isLikedByPost[post.id] ? 'liked' : ''}
 													>
-														Like {post.likesCount}
+														{isLikedByPost[post.id] ? 'Unlike' : 'Like'}{' '}
+														{post.likesCount}
 													</button>
-
 													<button onClick={() => handleComment(post.id)}>
-														Comment
+														{openedPostId === post.id
+															? 'Hide Comments'
+															: 'Comment'}{' '}
+														{post.commentsCount}
 													</button>
 													<button onClick={() => handleShare(post.id)}>
 														Share
 													</button>
 												</div>
+												{/* Comments Section */}
+												{openedPostId === post.id && (
+													<div class='comments-section'>
+														{comments.map((comment) => {
+															const date = new Date(comment.createdAt);
+															const timeAgo = formatDistanceToNow(date, {
+																addSuffix: true,
+															});
+
+															return (
+																<div key={comment?.id} class='comment'>
+																	<div class='comment-header'>
+																		<div class='comment-icon'>
+																			<img
+																				alt={'profile picture'}
+																				src={`${process.env.REACT_APP_HOST}/upload/${comment?.user.id}.webp`}
+																				onError={({ currentTarget }) => {
+																					currentTarget.onerror = null; // prevents looping
+																					currentTarget.src = `${process.env.REACT_APP_HOST}/upload/noimage.webp`;
+																				}}
+																			></img>
+																		</div>
+																		<div class='comment-author'>
+																			{comment?.user.first_name}{' '}
+																			{comment?.user.last_name}
+																		</div>
+																		<div class='comment-date'>{timeAgo}</div>
+																		{comment?.id_user === currentUser.id && (
+																			<span
+																				onClick={() =>
+																					handleRemoveComment(comment.id)
+																				}
+																			>
+																				<DeleteForeverIcon />
+																			</span>
+																		)}
+																	</div>
+																	<div class='comment-content'>
+																		{comment.content}
+																	</div>
+																	<div class='comment-footer'>
+																		<button
+																			onClick={() =>
+																				handleLikeComment(comment.id)
+																			}
+																			className={
+																				isLikedByComment[comment.id]
+																					? 'liked'
+																					: ''
+																			}
+																		>
+																			{isLikedByComment[comment.id]
+																				? 'Unlike'
+																				: 'Like'}{' '}
+																			{comment?.likesCount}
+																		</button>
+
+																		<button
+																			onClick={() => handleReply(comment.id)}
+																		>
+																			Reply
+																		</button>
+																	</div>
+																</div>
+															);
+														})}
+														<form
+															onSubmit={(e) => {
+																e.preventDefault();
+																handleSubmitComment(post.id);
+															}}
+														>
+															<input
+																type='text'
+																value={comment}
+																onChange={(e) => setComment(e.target.value)}
+																placeholder='Add a comment...'
+															/>
+															<button type='submit'>Post</button>
+														</form>
+													</div>
+												)}
 											</div>
 										);
 									})}

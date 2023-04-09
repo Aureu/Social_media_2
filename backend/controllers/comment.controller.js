@@ -13,7 +13,7 @@ exports.get = (req, res) => {
 		include: [
 			{
 				model: User,
-				attributes: ['first_name', 'last_name'],
+				attributes: ['first_name', 'last_name', 'id'],
 			},
 			{
 				model: Like,
@@ -65,11 +65,13 @@ exports.change = (req, res) => {
 };
 
 exports.delete = (req, res) => {
-	Comment.update({ isDeleted: 1 }, { where: { id: req.body.comment_id } }).then(
-		() => {
+	Comment.destroy({ where: { id: req.params.commentId } })
+		.then(() => {
 			res.sendStatus(200);
-		}
-	);
+		})
+		.catch((err) => {
+			res.status(500).send({ message: err.message });
+		});
 };
 
 exports.toggleLike = async (req, res) => {

@@ -3,6 +3,7 @@ const Post = db.post;
 const User = db.user;
 const Like = db.like;
 const Notification = db.notification;
+const Comment = db.comment;
 
 const { Sequelize } = require('sequelize');
 const Op = Sequelize.Op;
@@ -20,13 +21,32 @@ exports.get = (req, res) => {
 				as: 'likes',
 				attributes: [],
 			},
+			{
+				model: Comment,
+				as: 'comments',
+				attributes: [],
+			},
 		],
 		attributes: {
 			include: [
-				[Sequelize.fn('COUNT', Sequelize.col('likes.id')), 'likesCount'],
+				[
+					Sequelize.fn(
+						'COUNT',
+						Sequelize.fn('DISTINCT', Sequelize.col('likes.id'))
+					),
+					'likesCount',
+				],
+				[
+					Sequelize.fn(
+						'COUNT',
+						Sequelize.fn('DISTINCT', Sequelize.col('comments.id'))
+					),
+					'commentsCount',
+				],
 			],
 		},
 		group: ['posts.id'],
+		subQuery: false,
 	})
 		.then((posts) => {
 			res.send(posts).status(200);
@@ -40,6 +60,7 @@ exports.create = (req, res) => {
 	Post.create({
 		id_user: req.body.user_id,
 		content: req.body.content,
+		isDeleted: 0,
 	})
 		.then(() => {
 			res.sendStatus(200);
@@ -67,11 +88,13 @@ exports.change = (req, res) => {
 };
 
 exports.delete = (req, res) => {
-	Post.update({ isDeleted: 1 }, { where: { id: req.body.post_id } }).then(
-		() => {
+	Post.destroy({ where: { id: req.params.postId } })
+		.then(() => {
 			res.sendStatus(200);
-		}
-	);
+		})
+		.catch((err) => {
+			res.status(500).send({ message: err.message });
+		});
 };
 
 exports.toggleLike = async (req, res) => {
