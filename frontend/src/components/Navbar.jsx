@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import authService from '../services/auth.service';
 import axios from 'axios';
 
@@ -9,6 +9,11 @@ const Navbar = () => {
 	const [users, setUsers] = useState([]);
 	const [user, setUser] = useState();
 	const [notifications, setNotifications] = useState([]);
+	const navigate = useNavigate();
+
+	const handleClick = (id) => {
+		navigate(`/profile/${id}`);
+	};
 
 	const currentUser = authService.getCurrentUser();
 
@@ -125,7 +130,11 @@ const Navbar = () => {
 									<div className='dropdown-content'>
 										{notifications.map((notification) => (
 											<div key={notification.id} className='notification'>
-												<p>{notification.description}</p>
+												<p>
+													<Link to={`/profile/${notification.id_source}`}>
+														{notification.description}
+													</Link>{' '}
+												</p>
 											</div>
 										))}
 									</div>
@@ -178,8 +187,10 @@ const Navbar = () => {
 				<ul>
 					{users.map((user) => (
 						<li key={user.id}>
-							{user.first_name} {user.last_name}{' '}
-							<Link to={`/profile/${user.id}`}>Zobrazit</Link>
+							{user.first_name} {user.last_name} | @{user.username}{' '}
+							<a href='' onClick={() => handleClick(user.id)}>
+								View
+							</a>
 						</li>
 					))}
 				</ul>

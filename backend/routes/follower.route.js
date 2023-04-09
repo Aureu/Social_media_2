@@ -11,4 +11,6 @@ module.exports = function (app) {
 
 	app.post('/api/users/:id/follow', controller.create);
 	app.post('/api/users/:id/check-follow', controller.getFollow);
+	app.post('/api/users/get-followers', controller.getFollowers);
+	app.post('/api/users/get-followings', controller.getFollowings);
 };

@@ -1,4 +1,5 @@
 const jobPositions = [
+	{ label: 'Student' },
 	{ label: 'Software Engineer' },
 	{ label: 'Full Stack Developer' },
 	{ label: 'Frontend Developer' },

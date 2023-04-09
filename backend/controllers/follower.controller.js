@@ -61,3 +61,19 @@ exports.getFollow = async (req, res) => {
 		res.status(500).json({ error: 'Unable to check follow status.' });
 	}
 };
+
+exports.getFollowers = async (req, res) => {
+	Follower.findAll({
+		where: { id_follower_user: req.body.id_user },
+	}).then((followers) => {
+		res.send(followers).status(200);
+	});
+};
+
+exports.getFollowings = async (req, res) => {
+	Follower.findAll({
+		where: { id_following_user: req.body.id_user },
+	}).then((followers) => {
+		res.send(followers).status(200);
+	});
+};

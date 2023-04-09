@@ -16,6 +16,8 @@ const ProfilePage = () => {
 	const [user, setUser] = useState();
 	const [posts, setPosts] = useState();
 	const [bio, setBio] = useState();
+	const [followers, setFollowers] = useState();
+	const [followings, setFollowings] = useState();
 
 	const content = useRef();
 
@@ -33,7 +35,6 @@ const ProfilePage = () => {
 			`${process.env.REACT_APP_HOST}/api/post`,
 			{ user_id: currentUser.id }
 		);
-		console.log(response.data);
 		return response.data;
 	};
 
@@ -54,6 +55,36 @@ const ProfilePage = () => {
 
 		return response.data;
 	};
+
+	const fetchFollowers = async () => {
+		const response = await axios.post(
+			`${process.env.REACT_APP_HOST}/api/users/get-followers`,
+			{ id_user: currentUser.id }
+		);
+
+		return response.data;
+	};
+
+	const fetchFollowings = async () => {
+		const response = await axios.post(
+			`${process.env.REACT_APP_HOST}/api/users/get-followings`,
+			{ id_user: currentUser.id }
+		);
+
+		return response.data;
+	};
+
+	useEffect(() => {
+		fetchFollowings().then((following) => {
+			setFollowings(following);
+		});
+	}, []);
+
+	useEffect(() => {
+		fetchFollowers().then((follower) => {
+			setFollowers(follower);
+		});
+	}, []);
 
 	useEffect(() => {
 		fetchBio().then((bio) => {
@@ -155,6 +186,8 @@ const ProfilePage = () => {
 									</span>{' '}
 									{user?.location}
 								</p>
+								<p>Followers: {followers?.length}</p>
+								<p>Following: {followings?.length}</p>
 								<button className='edit-button' onClick={toggleInfoModal}>
 									Edit
 								</button>
