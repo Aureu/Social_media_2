@@ -506,6 +506,7 @@ button {
 			.profile-header {
 				display: flex;
 				align-items: center;
+				flex-direction: row;
 				padding: 10px;
 				border-bottom: 1px solid black;
 				.profile-photo {
@@ -607,11 +608,17 @@ button {
 							margin-bottom: 10px;
 
 							.post-icon {
-								width: 30px;
-								height: 30px;
+								width: 50px;
+								height: 50px;
 								border-radius: 50%;
 								background-color: #ccc;
 								margin-right: 10px;
+
+								img {
+									width: 50px;
+									height: 50px;
+									border-radius: 50%;
+								}
 							}
 
 							.post-author {
@@ -715,7 +722,6 @@ button {
 	font-size: 16px;
 	font-weight: 600;
 	cursor: pointer;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 	transition: background-color 0.2s ease-in-out;
 }
 
@@ -789,4 +795,48 @@ button {
 	.profile-container .wrapper .border .profile-main .right {
 		margin-top: 20px;
 	}
+}
+
+.modal-image {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 9999;
+}
+
+.profile-header__image {
+	position: relative;
+}
+
+.profile-header__image img.profile-photo {
+	transition: filter 0.2s;
+}
+
+.profile-header__image:hover img.profile-photo {
+	filter: brightness(70%);
+}
+
+.profile-header__image .edit {
+	display: none;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: white; /* set the color of the icon */
+	font-size: 1.5rem; /* set the size of the icon */
+	cursor: pointer;
+}
+
+.profile-header__image:hover .edit {
+	display: block;
+}
+
+button.liked {
+	color: red;
 }

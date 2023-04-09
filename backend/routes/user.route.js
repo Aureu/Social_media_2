@@ -1,6 +1,19 @@
 const controller = require('../controllers/user.controller');
 
 module.exports = function (app) {
+	const multer = require('multer');
+
+	const storage = multer.diskStorage({
+		destination: (req, file, cb) => {
+			cb(null, 'upload/');
+		},
+		filename: (req, file, cb) => {
+			cb(null, file.originalname);
+		},
+	});
+
+	const upload = multer({ storage: storage });
+
 	app.use(function (req, res, next) {
 		res.header(
 			'Access-Control-Allow-Headers',
@@ -20,4 +33,6 @@ module.exports = function (app) {
 	app.post('/api/user/bio', controller.getBio);
 
 	app.post('/api/user/change_bio', controller.changeBio);
+
+	app.post('/api/user/upload', upload.single('file'), controller.upload);
 };

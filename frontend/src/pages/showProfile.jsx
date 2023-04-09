@@ -21,13 +21,20 @@ function ShowProfilePage() {
 	const [followers, setFollowers] = useState();
 	const [followings, setFollowings] = useState();
 
-	const fetchPost = async () => {
-		const response = await axios.post(
-			`${process.env.REACT_APP_HOST}/api/post`,
-			{ user_id: id }
-		);
-		console.log(response.data);
-		return response.data;
+	const [isLikedByPost, setIsLikedByPost] = useState({});
+	const [likesCount, setLikesCount] = useState(0);
+
+	const fetchPosts = async () => {
+		try {
+			const response = await axios.post(
+				`${process.env.REACT_APP_HOST}/api/post`,
+				{ user_id: id }
+			);
+
+			setPosts(response.data);
+		} catch (error) {
+			console.error('Error fetching the posts:', error);
+		}
 	};
 
 	const fetchUser = async () => {
@@ -121,9 +128,7 @@ function ShowProfilePage() {
 	}, []);
 
 	useEffect(() => {
-		fetchPost().then((post) => {
-			setPosts(post);
-		});
+		fetchPosts();
 	}, []);
 
 	useEffect(() => {
@@ -131,6 +136,41 @@ function ShowProfilePage() {
 			checkFollow(currentUser.id);
 		}
 	}, [currentUser]);
+
+	const handleLike = async (postId) => {
+		try {
+			// Call your API to like/unlike the post
+			const response = await axios.post(
+				`${process.env.REACT_APP_HOST}/api/post/like`,
+				{
+					postId,
+					userId: currentUser.id,
+				}
+			);
+
+			fetchPosts();
+			// Check if the post was liked or unliked
+			if (response.data.liked) {
+				setLikesCount((prevCount) => prevCount + 1);
+				setIsLikedByPost((prevState) => ({ ...prevState, [postId]: true }));
+			} else {
+				setLikesCount((prevCount) => prevCount - 1);
+				setIsLikedByPost((prevState) => ({ ...prevState, [postId]: false }));
+			}
+		} catch (error) {
+			console.error('Error liking the post:', error);
+		}
+	};
+
+	const handleComment = (postId) => {
+		// Open a comment modal or expand a comment section to add a new comment
+		console.log(postId);
+	};
+
+	const handleShare = (postId) => {
+		// Share the post on social media or copy the post link to the clipboard
+		console.log(postId);
+	};
 	return (
 		<>
 			<Navbar />
@@ -139,10 +179,14 @@ function ShowProfilePage() {
 					<div className='border'>
 						<div className='profile-header'>
 							<img
-								src='profile-photo.png'
-								alt='Profile Photo'
 								className='profile-photo'
-							/>
+								alt={'profile picture'}
+								src={`${process.env.REACT_APP_HOST}/upload/${id}.webp`}
+								onError={({ currentTarget }) => {
+									currentTarget.onerror = null; // prevents looping
+									currentTarget.src = `${process.env.REACT_APP_HOST}/upload/noimage.webp`;
+								}}
+							></img>
 							<div className='user-info'>
 								<h1>
 									{user?.first_name} {user?.last_name}
@@ -199,7 +243,16 @@ function ShowProfilePage() {
 										return (
 											<div class='post'>
 												<div class='post-header'>
-													<div class='post-icon'></div>
+													<div class='post-icon'>
+														<img
+															alt={'profile picture'}
+															src={`${process.env.REACT_APP_HOST}/upload/${user?.id}.webp`}
+															onError={({ currentTarget }) => {
+																currentTarget.onerror = null; // prevents looping
+																currentTarget.src = `${process.env.REACT_APP_HOST}/upload/noimage.webp`;
+															}}
+														></img>
+													</div>
 													<div class='post-author'>
 														{post.user.first_name} {post.user.last_name}
 													</div>
@@ -207,9 +260,19 @@ function ShowProfilePage() {
 												</div>
 												<div class='post-content'>{post.content}</div>
 												<div class='post-footer'>
-													<button>Like</button>
-													<button>Comment</button>
-													<button>Share</button>
+													<button
+														onClick={() => handleLike(post.id)}
+														className={isLikedByPost[post.id] ? 'liked' : ''}
+													>
+														Like {post.likesCount}
+													</button>
+
+													<button onClick={() => handleComment(post.id)}>
+														Comment
+													</button>
+													<button onClick={() => handleShare(post.id)}>
+														Share
+													</button>
 												</div>
 											</div>
 										);

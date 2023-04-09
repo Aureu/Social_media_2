@@ -85,3 +85,9 @@ exports.searchUsers = async (req, res) => {
 		res.status(500).json({ message: 'Internal server error' });
 	}
 };
+
+exports.upload = (req, res) => {
+	//if (req.body.api_key !== process.env.API_TOKEN) return res.sendStatus(401);
+
+	res.sendStatus(200);
+};

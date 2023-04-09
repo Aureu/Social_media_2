@@ -28,6 +28,8 @@ require('./routes/comment.route')(app);
 require('./routes/follower.route')(app);
 require('./routes/notification.route')(app);
 
+app.use('/upload', express.static('upload'));
+
 // set port
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
