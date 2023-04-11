@@ -18,4 +18,6 @@ module.exports = function (app) {
 	app.post('/api/comment/delete/:commentId', controller.delete);
 
 	app.post('/api/comment/like', controller.toggleLike);
+
+	app.post('/api/comments/:postId', controller.getComments);
 };

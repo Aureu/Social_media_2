@@ -26,6 +26,7 @@ function ShowProfilePage() {
 	const [isLikedByPost, setIsLikedByPost] = useState({});
 	const [isLikedByComment, setIsLikedByComment] = useState({});
 	const [likesCount, setLikesCount] = useState(0);
+	const [commentsCount, setCommentsCount] = useState();
 
 	const [openedPostId, setOpenedPostId] = useState(null);
 	const [comment, setComment] = useState('');
@@ -233,19 +234,13 @@ function ShowProfilePage() {
 
 			// Check if the comment was liked or unliked
 			if (response.data.liked) {
-				setLikesCount((prevCount) => ({
-					...prevCount,
-					[commentId]: prevCount[commentId] ? prevCount[commentId] + 1 : 1,
-				}));
+				setCommentsCount((prevCount) => prevCount + 1);
 				setIsLikedByComment((prevState) => ({
 					...prevState,
 					[commentId]: true,
 				}));
 			} else {
-				setLikesCount((prevCount) => ({
-					...prevCount,
-					[commentId]: prevCount[commentId] ? prevCount[commentId] - 1 : 0,
-				}));
+				setCommentsCount((prevCount) => prevCount - 1);
 				setIsLikedByComment((prevState) => ({
 					...prevState,
 					[commentId]: false,
@@ -315,16 +310,6 @@ function ShowProfilePage() {
 							<div className='left'>
 								<h3>About Me</h3>
 								<p>{bio?.bio}</p>
-
-								<h3>Skills</h3>
-								<ul>
-									<li>HTML</li>
-									<li>CSS</li>
-									<li>JavaScript</li>
-									<li>React</li>
-									<li>Node.js</li>
-									<li>SQL</li>
-								</ul>
 							</div>
 							<div className='right'>
 								<h3>Posts</h3>

@@ -92,9 +92,9 @@ const RegisterPage = () => {
 						/>
 					</form>
 					<p>
-						Máte již účet?
+						Have already an an account?
 						<a href='/' className='form__register-link'>
-							Login
+							Login here
 						</a>
 					</p>
 				</div>

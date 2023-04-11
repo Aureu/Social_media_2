@@ -27,6 +27,8 @@ const ProfilePage = () => {
 
 	const [likesCount, setLikesCount] = useState(0);
 	const [isLikedByPost, setIsLikedByPost] = useState({});
+	const [isLikedByComment, setIsLikedByComment] = useState({});
+	const [commentsCount, setCommentsCount] = useState();
 
 	const [openedPostId, setOpenedPostId] = useState(null);
 	const [comment, setComment] = useState('');
@@ -257,7 +259,7 @@ const ProfilePage = () => {
 
 	const handleLikeComment = async (commentId) => {
 		try {
-			// Call your API to like/unlike the post
+			// Call your API to like/unlike the comment
 			const response = await axios.post(
 				`${process.env.REACT_APP_HOST}/api/comment/like`,
 				{
@@ -265,18 +267,22 @@ const ProfilePage = () => {
 					userId: user.id,
 				}
 			);
-
-			fetchComments(commentId);
-			// Check if the post was liked or unliked
+			// Check if the comment was liked or unliked
 			if (response.data.liked) {
-				setLikesCount((prevCount) => prevCount + 1);
-				setIsLikedByPost((prevState) => ({ ...prevState, [commentId]: true }));
+				setCommentsCount((prevCount) => prevCount + 1);
+				setIsLikedByComment((prevState) => ({
+					...prevState,
+					[commentId]: true,
+				}));
 			} else {
-				setLikesCount((prevCount) => prevCount - 1);
-				setIsLikedByPost((prevState) => ({ ...prevState, [commentId]: false }));
+				setCommentsCount((prevCount) => prevCount - 1);
+				setIsLikedByComment((prevState) => ({
+					...prevState,
+					[commentId]: false,
+				}));
 			}
 		} catch (error) {
-			console.error('Error liking the post:', error);
+			console.error('Error liking the comment:', error);
 		}
 	};
 
@@ -307,8 +313,6 @@ const ProfilePage = () => {
 	};
 
 	const handleReply = () => {};
-
-	const isLikedByComment = () => {};
 
 	return (
 		<>
@@ -391,16 +395,6 @@ const ProfilePage = () => {
 									changeUserBio={changeUserBio}
 									bio={bio}
 								/>
-								<h3>Skills</h3>
-								<ul>
-									<li>HTML</li>
-									<li>CSS</li>
-									<li>JavaScript</li>
-									<li>React</li>
-									<li>Node.js</li>
-									<li>SQL</li>
-								</ul>
-								<button className='edit-button'>Edit</button>
 							</div>
 							<div className='right'>
 								<h3>Posts</h3>
@@ -455,7 +449,8 @@ const ProfilePage = () => {
 														onClick={() => handleLike(post.id)}
 														className={isLikedByPost[post.id] ? 'liked' : ''}
 													>
-														Like {post.likesCount}
+														{isLikedByPost[post.id] ? 'Unlike' : 'Like'}{' '}
+														{post.likesCount}
 													</button>
 													<button onClick={() => handleComment(post.id)}>
 														{openedPostId === post.id
@@ -516,7 +511,10 @@ const ProfilePage = () => {
 																					: ''
 																			}
 																		>
-																			Like {comment?.likesCount}
+																			{isLikedByComment[comment.id]
+																				? 'Unlike'
+																				: 'Like'}{' '}
+																			{comment?.likesCount}
 																		</button>
 																		<button
 																			onClick={() => handleReply(comment.id)}
@@ -538,6 +536,7 @@ const ProfilePage = () => {
 																value={comment}
 																onChange={(e) => setComment(e.target.value)}
 																placeholder='Add a comment...'
+																required
 															/>
 															<button type='submit'>Post</button>
 														</form>

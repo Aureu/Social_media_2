@@ -32,6 +32,20 @@ exports.get = (req, res) => {
 	});
 };
 
+exports.getComments = (req, res) => {
+	Comment.findAll({
+		where: { id_post: req.params.postId },
+		include: [
+			{
+				model: User,
+				attributes: ['first_name', 'last_name'],
+			},
+		],
+	}).then((comments) => {
+		res.status(200).send(comments);
+	});
+};
+
 exports.create = (req, res) => {
 	Comment.create({
 		id_user: req.body.userId,
