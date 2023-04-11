@@ -9,6 +9,7 @@ import {
 	HomePage,
 	AdminPage,
 	UsersPage,
+	PostsPage,
 } from './pages';
 import PrivateRoute from './components/PrivateRoute';
 
@@ -32,6 +33,9 @@ function App() {
 					</Route>
 					<Route path='/admin/users' element={<PrivateRoute />}>
 						<Route index element={<UsersPage />} />
+					</Route>
+					<Route path='/admin/posts' element={<PrivateRoute />}>
+						<Route index element={<PostsPage />} />
 					</Route>
 				</Routes>
 			</Router>

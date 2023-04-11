@@ -105,7 +105,7 @@ const Navbar = () => {
 						</li>
 
 						<li>
-							<NavLink to='/admin/content' className='nav-item'>
+							<NavLink to='/admin/posts' className='nav-item'>
 								Content Management
 							</NavLink>
 						</li>

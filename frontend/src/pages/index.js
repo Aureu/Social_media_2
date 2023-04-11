@@ -6,6 +6,7 @@ import ShowProfilePage from './showProfile';
 import FollowingsPage from './followings';
 import AdminPage from './admin/admin';
 import UsersPage from './admin/users';
+import PostsPage from './admin/posts';
 
 export {
 	HomePage,
@@ -16,4 +17,5 @@ export {
 	FollowingsPage,
 	AdminPage,
 	UsersPage,
+	PostsPage,
 };

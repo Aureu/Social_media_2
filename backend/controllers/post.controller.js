@@ -56,6 +56,19 @@ exports.get = (req, res) => {
 		});
 };
 
+exports.getPosts = (req, res) => {
+	Post.findAll({
+		include: [
+			{
+				model: User,
+				attributes: ['first_name', 'last_name'],
+			},
+		],
+	}).then((posts) => {
+		res.status(200).send(posts);
+	});
+};
+
 exports.create = (req, res) => {
 	Post.create({
 		id_user: req.body.user_id,
@@ -76,7 +89,7 @@ exports.change = (req, res) => {
 			...req.body,
 		},
 		{
-			where: { id: req.body.post_id },
+			where: { id: req.params.id },
 		}
 	)
 		.then(() => {
