@@ -14,19 +14,32 @@ const LoginPage = () => {
 		e.preventDefault();
 
 		AuthService.login(user.current.value, pass.current.value)
-			.then(() => {
-				navigate('/profile');
+			.then((response) => {
+				const { isAdmin } = response;
+
+				if (isAdmin) {
+					// Redirect the user to the admin page
+					navigate('/admin');
+				} else {
+					// Redirect the user to the regular user page (profile)
+					navigate('/profile');
+				}
 			})
 			.catch((error) => {
-				if (error.response.status === 401) {
-					setError('Invalid Password!');
-				} else if (error.response.status === 404) {
-					setError('User not found');
+				if (error.response) {
+					if (error.response.status === 401) {
+						setError('Invalid Password!');
+					} else if (error.response.status === 404) {
+						setError('User not found');
+					} else {
+						setError('An error occurred. Please try again.');
+					}
 				} else {
-					setError('An error occurred. Please try again.');
+					setError('An unexpected error occurred. Please try again.');
 				}
 			});
 	};
+
 	return (
 		<>
 			<div className='form-container'>

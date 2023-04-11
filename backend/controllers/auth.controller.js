@@ -15,6 +15,7 @@ exports.register = (req, res) => {
 		email: req.body.email,
 		password: bcrypt.hashSync(req.body.password, 8),
 		isDeleted: '0',
+		isAdmin: '0',
 	})
 		.then((user) => {
 			const id_user = user.dataValues.id;
@@ -59,14 +60,17 @@ exports.login = (req, res) => {
 				expiresIn: 86400, //24hours
 			});
 			if (user) {
-				res.status(200).send({
+				const response = {
 					id: user.id,
 					first_name: user.first_name,
 					last_name: user.last_name,
 					username: user.username,
 					email: user.email,
 					accessToken: token,
-				});
+					isAdmin: user.isAdmin, // Add isAdmin flag to the response
+				};
+
+				res.status(200).send(response);
 			}
 		})
 		.catch((err) => {

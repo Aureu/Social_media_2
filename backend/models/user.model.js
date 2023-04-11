@@ -29,6 +29,9 @@ module.exports = (sequelize, Sequelize) => {
 		isDeleted: {
 			type: Sequelize.BOOLEAN,
 		},
+		isAdmin: {
+			type: Sequelize.BOOLEAN,
+		},
 	});
 
 	return User;

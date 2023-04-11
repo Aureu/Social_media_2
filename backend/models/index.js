@@ -39,6 +39,16 @@ db.user_avatar.belongsTo(db.user, {
 	foreignKey: 'id_user',
 });
 
+db.user.hasMany(db.follower, {
+	foreignKey: 'id_following_user',
+	as: 'followingUser',
+});
+
+db.user.hasMany(db.follower, {
+	foreignKey: 'id_follower_user',
+	as: 'followerUser',
+});
+
 // POST RELATIONS
 db.post.belongsTo(db.user, {
 	foreignKey: 'id_user',
@@ -87,11 +97,13 @@ db.like.belongsTo(db.comment, {
 
 // FOLLOWER RELATIONS
 db.follower.belongsTo(db.user, {
-	foreignKey: 'id_follower_user',
+	foreignKey: 'id_following_user',
+	as: 'followingUser',
 });
 
 db.follower.belongsTo(db.user, {
-	foreignKey: 'id_following_user',
+	foreignKey: 'id_follower_user',
+	as: 'followerUser',
 });
 
 module.exports = db;

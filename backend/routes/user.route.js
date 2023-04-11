@@ -35,4 +35,6 @@ module.exports = function (app) {
 	app.post('/api/user/change_bio', controller.changeBio);
 
 	app.post('/api/user/upload', upload.single('file'), controller.upload);
+
+	app.get('/api/users/get-all', controller.getUsers);
 };

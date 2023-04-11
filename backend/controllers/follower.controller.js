@@ -71,9 +71,21 @@ exports.getFollowers = async (req, res) => {
 };
 
 exports.getFollowings = async (req, res) => {
-	Follower.findAll({
-		where: { id_following_user: req.body.id_user },
-	}).then((followers) => {
-		res.send(followers).status(200);
-	});
+	try {
+		const followings = await Follower.findAll({
+			where: { id_following_user: req.body.id_user },
+			include: [
+				{
+					model: User,
+					as: 'followerUser', // Update the alias here
+					attributes: ['id', 'username', 'first_name', 'last_name'],
+				},
+			],
+		});
+
+		res.status(200).json(followings);
+	} catch (error) {
+		console.error('Error fetching followings:', error);
+		res.status(500).json({ message: 'Error fetching followings', error });
+	}
 };

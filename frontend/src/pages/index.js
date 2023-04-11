@@ -4,6 +4,8 @@ import LoginPage from './login';
 import ProfilePage from './profile';
 import ShowProfilePage from './showProfile';
 import FollowingsPage from './followings';
+import AdminPage from './admin/admin';
+import UsersPage from './admin/users';
 
 export {
 	HomePage,
@@ -12,4 +14,6 @@ export {
 	ProfilePage,
 	ShowProfilePage,
 	FollowingsPage,
+	AdminPage,
+	UsersPage,
 };

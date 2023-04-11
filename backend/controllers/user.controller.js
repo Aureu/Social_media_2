@@ -10,6 +10,12 @@ exports.getUser = (req, res) => {
 	});
 };
 
+exports.getUsers = (req, res) => {
+	User.findAll().then((users) => {
+		res.status(200).send(users);
+	});
+};
+
 exports.getBio = (req, res) => {
 	console.log(req.body.id);
 	UserBio.findOne({ where: { id_user: req.body.id } }).then((bio) => {
