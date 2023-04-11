@@ -31,8 +31,14 @@ db.user_info = require('./user_info.model.js')(sequelize, Sequelize);
 db.notification = require('./notification.model.js')(sequelize, Sequelize);
 
 // USER RELATIONS
+db.user.hasMany(db.user_info, {
+	foreignKey: 'user_id',
+	onDelete: 'CASCADE',
+	onUpdate: 'CASCADE',
+});
+
 db.user_info.belongsTo(db.user, {
-	foreignKey: 'id_user',
+	foreignKey: 'user_id',
 });
 
 db.user_avatar.belongsTo(db.user, {

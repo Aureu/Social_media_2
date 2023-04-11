@@ -26,7 +26,7 @@ module.exports = function (app) {
 
 	app.post('/api/user/change', controller.change);
 
-	app.post('/api/user/delete', controller.deleteUser);
+	app.post('/api/user/delete/:id', controller.deleteUser);
 
 	app.get('/api/user/search', controller.searchUsers);
 
@@ -37,4 +37,6 @@ module.exports = function (app) {
 	app.post('/api/user/upload', upload.single('file'), controller.upload);
 
 	app.get('/api/users/get-all', controller.getUsers);
+
+	app.post('/api/user/update/:id', controller.updateUser);
 };

@@ -58,13 +58,20 @@ exports.changeBio = (req, res) => {
 		});
 };
 
+// In your usersController file (e.g., controllers/usersController.js)
 exports.deleteUser = (req, res) => {
-	User.update({ isDeleted: 1 }, { where: { id: req.body.user_id } })
-		.then(() => {
-			res.sendStatus(200);
+	const id = req.params.id;
+
+	User.destroy({ where: { id: id } })
+		.then((num) => {
+			if (num === 1) {
+				res.status(200).send({ message: 'User deleted successfully' });
+			} else {
+				res.status(404).send({ message: 'User not found' });
+			}
 		})
 		.catch((err) => {
-			res.status(500).send({ message: err.message });
+			res.status(500).send({ message: err.message || 'Error deleting user' });
 		});
 };
 
@@ -96,4 +103,21 @@ exports.upload = (req, res) => {
 	//if (req.body.api_key !== process.env.API_TOKEN) return res.sendStatus(401);
 
 	res.sendStatus(200);
+};
+
+exports.updateUser = (req, res) => {
+	User.update(
+		{
+			...req.body,
+		},
+		{
+			where: { id: req.params.id },
+		}
+	)
+		.then(() => {
+			res.sendStatus(200);
+		})
+		.catch((err) => {
+			res.status(500).send({ message: err.message });
+		});
 };

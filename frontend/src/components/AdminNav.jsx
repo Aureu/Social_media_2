@@ -116,7 +116,14 @@ const Navbar = () => {
 						<div className='profile-wrapper'>
 							<span>
 								<li>
-									<span onClick={authService.logout}>Logout</span>
+									<a
+										href='/'
+										className='nav-item'
+										onClick={authService.logout}
+										style={{ color: 'black' }}
+									>
+										Logout
+									</a>
 								</li>
 							</span>
 						</div>
