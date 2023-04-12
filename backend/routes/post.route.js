@@ -20,4 +20,6 @@ module.exports = function (app) {
 	app.post('/api/post/like', controller.toggleLike);
 
 	app.post('/api/post/delete/:postId', controller.delete);
+
+	app.post('/api/posts/get-following-posts', controller.getFollowingPosts);
 };

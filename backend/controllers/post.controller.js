@@ -4,6 +4,7 @@ const User = db.user;
 const Like = db.like;
 const Notification = db.notification;
 const Comment = db.comment;
+const Follower = db.follower;
 
 const { Sequelize } = require('sequelize');
 const Op = Sequelize.Op;
@@ -159,5 +160,48 @@ exports.toggleLike = async (req, res) => {
 		}
 	} catch (err) {
 		res.status(500).send({ message: err.message });
+	}
+};
+
+exports.getFollowingPosts = async (req, res) => {
+	try {
+		const currentUserId = req.body.id; // Assuming you have user ID in req.user object
+
+		// Fetch users the current user is following
+		const user = await User.findOne({
+			where: { id: currentUserId },
+			include: [{ model: Follower, as: 'followingUser' }],
+		});
+
+		const followingIds = user.followingUser.map(
+			(followingUser) => followingUser.id_follower_user
+		);
+
+		console.log(user);
+
+		// Fetch posts and comments created by the followed users
+		const posts = await Post.findAll({
+			where: { id_user: followingIds },
+			include: [
+				{ model: User, attributes: ['first_name', 'last_name'] },
+				{
+					model: Comment,
+					as: 'comments',
+					include: [
+						{
+							model: User,
+							attributes: ['first_name', 'last_name'],
+						},
+					],
+				},
+				{ model: Like, as: 'likes' },
+			],
+			order: [['createdAt', 'DESC']],
+		});
+
+		res.json({ posts });
+	} catch (err) {
+		console.error(err);
+		res.status(500).json({ message: 'Internal server error' });
 	}
 };

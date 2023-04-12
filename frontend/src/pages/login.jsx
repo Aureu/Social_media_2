@@ -19,7 +19,7 @@ const LoginPage = () => {
 
 				if (isAdmin) {
 					// Redirect the user to the admin page
-					navigate('/admin');
+					navigate('/admin/users');
 				} else {
 					// Redirect the user to the regular user page (profile)
 					navigate('/profile');

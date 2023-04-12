@@ -7,7 +7,6 @@ import {
 	ShowProfilePage,
 	FollowingsPage,
 	HomePage,
-	AdminPage,
 	UsersPage,
 	PostsPage,
 } from './pages';
@@ -20,7 +19,9 @@ function App() {
 				<Routes>
 					<Route path='/register' element={<RegisterPage />} />
 					<Route path='/' element={<LoginPage />} />
-					<Route path='/home' element={<HomePage />} />
+					<Route path='/home' element={<PrivateRoute />}>
+						<Route index element={<HomePage />} />
+					</Route>
 					<Route path='/profile' element={<PrivateRoute />}>
 						<Route index element={<ProfilePage />} />
 						<Route path=':id' element={<ShowProfilePage />} />
@@ -28,9 +29,7 @@ function App() {
 					<Route path='/followings' element={<PrivateRoute />}>
 						<Route index element={<FollowingsPage />} />
 					</Route>
-					<Route path='/admin' element={<PrivateRoute />}>
-						<Route index element={<AdminPage />} />
-					</Route>
+
 					<Route path='/admin/users' element={<PrivateRoute />}>
 						<Route index element={<UsersPage />} />
 					</Route>

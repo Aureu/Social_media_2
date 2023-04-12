@@ -36,4 +36,14 @@ app.listen(PORT, () => {
 	console.log(`Server is running on port ${PORT}.`);
 });
 
-function initial() {}
+function initial() {
+	/* User.create({
+		first_name: 'Teo',
+		last_name: 'Nykiel',
+		username: 'admin',
+		email: 't@t.com',
+		password: '$2a$08$i3tsgZsDhdF7LyovUWKru.n1wapv0tOq9EywIdEKqG78XlvrEShOO',
+		isDeleted: '0',
+		isAdmin: '1',
+	}); */
+}
