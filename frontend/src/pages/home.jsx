@@ -3,17 +3,9 @@ import AuthService from '../services/auth.service';
 import axios from 'axios';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
-import ProfileModal from '../components/ProfileModal';
-import BioModal from '../components/BioModal';
-
 import Navbar from '../components/Navbar';
 
-import WorkIcon from '@mui/icons-material/Work';
-import PublicIcon from '@mui/icons-material/Public';
-import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-
-import ChangeProfileImage from '../components/ChangeProfileImage';
 
 const HomePage = () => {
 	const [posts, setPosts] = useState([]);
@@ -21,10 +13,6 @@ const HomePage = () => {
 	const currentUser = AuthService.getCurrentUser();
 
 	const [user, setUser] = useState();
-	const [bio, setBio] = useState();
-	const [followers, setFollowers] = useState();
-	const [followings, setFollowings] = useState();
-	const [imgModal, setImgModal] = useState(false);
 
 	const [likesCount, setLikesCount] = useState(0);
 	const [isLikedByPost, setIsLikedByPost] = useState({});
@@ -67,7 +55,7 @@ const HomePage = () => {
 				`${process.env.REACT_APP_HOST}/api/post/like`,
 				{
 					postId,
-					userId: user.id,
+					userId: currentUser.id,
 				}
 			);
 
@@ -121,7 +109,7 @@ const HomePage = () => {
 				`${process.env.REACT_APP_HOST}/api/comment/create`,
 				{
 					postId,
-					userId: user.id,
+					userId: currentUser.id,
 					content: comment,
 				}
 			);
@@ -141,7 +129,7 @@ const HomePage = () => {
 				`${process.env.REACT_APP_HOST}/api/comment/like`,
 				{
 					commentId,
-					userId: user.id,
+					userId: currentUser.id,
 				}
 			);
 			// Check if the comment was liked or unliked
@@ -254,11 +242,13 @@ const HomePage = () => {
 															{comment?.user.last_name}
 														</div>
 														<div class='comment-date'>{timeAgo}</div>
-														<span
-															onClick={() => handleRemoveComment(comment.id)}
-														>
-															<DeleteForeverIcon />
-														</span>
+														{comment?.id_user === currentUser.id && (
+															<span
+																onClick={() => handleRemoveComment(comment.id)}
+															>
+																<DeleteForeverIcon />
+															</span>
+														)}
 													</div>
 													<div class='comment-content'>{comment.content}</div>
 													<div class='comment-footer'>
