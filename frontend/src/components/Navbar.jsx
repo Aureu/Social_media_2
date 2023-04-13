@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import authService from '../services/auth.service';
 import axios from 'axios';
+import { Modal, Button } from 'react-bootstrap';
+import ChangePasswordForm from './ChangePasswordForm';
 
 const Navbar = () => {
 	const [showNavbar, setShowNavbar] = useState(false);
@@ -10,6 +12,15 @@ const Navbar = () => {
 	const [user, setUser] = useState();
 	const [notifications, setNotifications] = useState([]);
 	const navigate = useNavigate();
+	const [showModal, setShowModal] = useState(false);
+
+	const handleOpenModal = () => {
+		setShowModal(true);
+	};
+
+	const handleCloseModal = () => {
+		setShowModal(false);
+	};
 
 	const handleClick = (id) => {
 		navigate(`/profile/${id}`);
@@ -192,9 +203,13 @@ const Navbar = () => {
 									</NavLink>
 								</li>
 								<li>
-									<NavLink to='/settings' className='nav-item'>
-										Settings
-									</NavLink>
+									<Button
+										className='nav-item'
+										onClick={handleOpenModal}
+										style={{ color: 'black' }}
+									>
+										Change Password
+									</Button>
 								</li>
 								<li>
 									<a href='/' className='nav-item' onClick={authService.logout}>
@@ -218,6 +233,19 @@ const Navbar = () => {
 					))}
 				</ul>
 			</div>
+			<Modal show={showModal} onHide={handleCloseModal}>
+				<Modal.Header closeButton>
+					<Modal.Title>Change Password</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					<ChangePasswordForm />
+				</Modal.Body>
+				<Modal.Footer>
+					<Button variant='secondary' onClick={handleCloseModal}>
+						Close
+					</Button>
+				</Modal.Footer>
+			</Modal>
 		</nav>
 	);
 };

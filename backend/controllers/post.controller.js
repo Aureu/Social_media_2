@@ -196,6 +196,7 @@ exports.getFollowingPosts = async (req, res) => {
 				},
 				{ model: Like, as: 'likes' },
 			],
+
 			order: [['createdAt', 'DESC']],
 		});
 

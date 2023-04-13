@@ -39,4 +39,6 @@ module.exports = function (app) {
 	app.get('/api/users/get-all', controller.getUsers);
 
 	app.post('/api/user/update/:id', controller.updateUser);
+
+	app.post('/api/user/change-password', controller.changePassword);
 };

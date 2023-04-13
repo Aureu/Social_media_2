@@ -89,3 +89,31 @@ exports.getFollowings = async (req, res) => {
 		res.status(500).json({ message: 'Error fetching followings', error });
 	}
 };
+
+exports.unfollowUser = async (req, res) => {
+	const following_user_id = req.body.following_user_id;
+	const follower_user_id = req.body.follower_user_id;
+
+	try {
+		const result = await Follower.destroy({
+			where: {
+				id_following_user: following_user_id,
+				id_follower_user: follower_user_id,
+			},
+		});
+
+		if (result) {
+			res.status(200).json({
+				message: `User ${following_user_id} has unfollowed user ${follower_user_id}`,
+			});
+		} else {
+			res.status(404).json({
+				error: 'No follower relationship found',
+			});
+		}
+	} catch (error) {
+		res.status(500).json({
+			error: 'Error while unfollowing user',
+		});
+	}
+};

@@ -1,6 +1,7 @@
 const db = require('../models');
 const User = db.user;
 const UserBio = db.user_info;
+const bcrypt = require('bcryptjs');
 
 const { Op } = require('sequelize');
 
@@ -120,4 +121,31 @@ exports.updateUser = (req, res) => {
 		.catch((err) => {
 			res.status(500).send({ message: err.message });
 		});
+};
+
+exports.changePassword = async (req, res) => {
+	const userId = req.body.userId;
+	const oldPassword = req.body.oldPassword;
+	const newPassword = req.body.newPassword;
+
+	try {
+		const user = await User.findByPk(userId);
+
+		if (!user) {
+			return res.status(404).json({ error: 'User not found' });
+		}
+
+		const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+
+		if (!isPasswordValid) {
+			return res.status(400).json({ error: 'Old password is incorrect' });
+		}
+
+		const hashedPassword = await bcrypt.hash(newPassword, 10);
+		await user.update({ password: hashedPassword });
+
+		res.status(200).json({ message: 'Password updated successfully' });
+	} catch (error) {
+		res.status(500).json({ error: 'Error updating password' });
+	}
 };

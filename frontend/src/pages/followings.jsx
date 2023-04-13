@@ -16,6 +16,32 @@ const FollowingsPage = () => {
 		navigate(`/profile/${id}`);
 	};
 
+	const handleUnfollow = async (id) => {
+		const following_user_id = currentUser.id;
+		const follower_user_id = id;
+
+		try {
+			const response = await axios.post(
+				`${process.env.REACT_APP_HOST}/api/user/unfollow`,
+				{
+					following_user_id: following_user_id,
+					follower_user_id: follower_user_id,
+				}
+			);
+
+			if (response.status === 200) {
+				console.log(
+					`User ${following_user_id} has unfollowed user ${follower_user_id}`
+				);
+				window.location.reload();
+			} else {
+				console.error('Failed to unfollow user');
+			}
+		} catch (error) {
+			console.error('Error while unfollowing user:', error);
+		}
+	};
+
 	useEffect(() => {
 		const fetchFollowings = async () => {
 			try {
@@ -67,6 +93,12 @@ const FollowingsPage = () => {
 								onClick={() => handleClick(following.followerUser.id)}
 							>
 								View
+							</button>
+							<button
+								className='view-button'
+								onClick={() => handleUnfollow(following.followerUser.id)}
+							>
+								Unfollow
 							</button>
 						</div>
 					))}

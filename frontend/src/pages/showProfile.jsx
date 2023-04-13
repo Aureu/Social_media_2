@@ -358,9 +358,7 @@ function ShowProfilePage() {
 															: 'Comment'}{' '}
 														{post.commentsCount}
 													</button>
-													<button onClick={() => handleShare(post.id)}>
-														Share
-													</button>
+													<div></div>
 												</div>
 												{/* Comments Section */}
 												{openedPostId === post.id && (
@@ -417,12 +415,6 @@ function ShowProfilePage() {
 																				? 'Unlike'
 																				: 'Like'}{' '}
 																			{comment?.likesCount}
-																		</button>
-
-																		<button
-																			onClick={() => handleReply(comment.id)}
-																		>
-																			Reply
 																		</button>
 																	</div>
 																</div>

@@ -207,13 +207,13 @@ const HomePage = () => {
 										className={isLikedByPost[post.id] ? 'liked' : ''}
 									>
 										{isLikedByPost[post.id] ? 'Unlike' : 'Like'}{' '}
-										{post.likesCount}
+										{post?.likesCount}
 									</button>
 									<button onClick={() => handleComment(post.id)}>
 										{openedPostId === post.id ? 'Hide Comments' : 'Comment'}{' '}
-										{post.commentsCount}
+										{post?.commentsCount}
 									</button>
-									<button onClick={() => handleShare(post.id)}>Share</button>
+									<div></div>
 								</div>
 								{/* Comments Section */}
 								{openedPostId === post.id && (
@@ -260,9 +260,6 @@ const HomePage = () => {
 														>
 															{isLikedByComment[comment.id] ? 'Unlike' : 'Like'}{' '}
 															{comment?.likesCount}
-														</button>
-														<button onClick={() => handleReply(comment.id)}>
-															Reply
 														</button>
 													</div>
 												</div>
