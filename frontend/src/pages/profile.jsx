@@ -473,7 +473,7 @@ const ProfilePage = () => {
 																		<div class='comment-icon'>
 																			<img
 																				alt={'profile picture'}
-																				src={`${process.env.REACT_APP_HOST}/upload/${user.id}.webp`}
+																				src={`${process.env.REACT_APP_HOST}/upload/${comment.user.id}.webp`}
 																				onError={({ currentTarget }) => {
 																					currentTarget.onerror = null; // prevents looping
 																					currentTarget.src = `${process.env.REACT_APP_HOST}/upload/noimage.webp`;
